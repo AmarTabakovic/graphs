@@ -1,0 +1,47 @@
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--darker);
+}
+
+#root {
+    display: flex;
+    flex-direction: row;
+    color: var(--light);
+    font-family: Inter, sans-serif;
+}
+
+#sidebar {
+    width: 400px;
+    height: 100%;
+    background-color: var(--darkest);
+    height: 100vh;
+}
+
+canvas {
+    position: absolute;
+    left: var(--sidebar-width);
+    top: 0;
+    //z-index: 1;
+    white-space: nowrap;
+}
+
+#vertex-canvas {
+    z-index: 499;
+}
+
+#edge-canvas {
+    z-index: 500;
+}
+
+#footer {
+    width: 400px;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
