@@ -1,10 +1,12 @@
 import { state } from '@/js/state'
 
+/** */
 const VERTEX_STATES = {
   unexplored: 'unexplored',
   explored: 'explored',
 }
 
+/** */
 const EDGE_STATES = {
   unexplored: 'unexplored',
   discoveryEdge: 'discoveryEdge',
@@ -12,9 +14,18 @@ const EDGE_STATES = {
   crossEdge: 'crossEdge',
 }
 
-const ARROW_LENGTH = 40
+const COLORS = {
+  green: '#82a762',
+  yellow: '#e1af4c',
+  blue: '#4b6a91',
+  white: '#e5e9f0',
+  canvas: '#333947'
+}
+
+const ARROW_SIDE_LENGTH = 40
 const CANVAS_X_OFFSET = 400
 const VERTEX_RADIUS = 40
+const STROKE_WIDTH = 2
 
 /**
  * 
@@ -23,7 +34,8 @@ const VERTEX_RADIUS = 40
  * @returns 
  */
 const insertVertex = (xPos, yPos) => {
-  let canvasVertex = {
+  /** Creating vertex list entry */
+  let vertex = {
     xPos: xPos - CANVAS_X_OFFSET,
     yPos: yPos,
     id: state.currentVertexId,
@@ -31,9 +43,13 @@ const insertVertex = (xPos, yPos) => {
     outgoingEdges: [],
     state: VERTEX_STATES.unexplored,
   }
-  state.vertices.push(canvasVertex)
+  state.vertices.push(vertex)
+  state.initialVertices.push(vertex)
   state.currentVertexId++
-  return canvasVertex
+
+  addVertexToStartVertexDropdown(vertex)
+
+  return vertex
 }
 
 /**
@@ -45,10 +61,8 @@ const insertVertex = (xPos, yPos) => {
  * @returns 
  */
 const insertEdge = (vertex0, vertex1, weight, isDirected) => {
-  /**
-   * Creating edge list entry.
-   */
-  let canvasEdge = {
+  /** Creating edge list entry */
+  let edge = {
     vertex0: vertex0,
     vertex1: vertex1,
     isDirected: isDirected,
@@ -60,11 +74,20 @@ const insertEdge = (vertex0, vertex1, weight, isDirected) => {
    *
    * TODO: Handle undirected edges case.
    */
-  vertex0.outgoingEdges.push(canvasEdge)
-  if (isDirected) vertex1.incomingEdges.push(canvasEdge)
-  else vertex1.outgoingEdges.push(canvasEdge)
-  state.edges.push(canvasEdge)
-  return canvasEdge
+  vertex0.outgoingEdges.push(edge)
+  if (isDirected) vertex1.incomingEdges.push(edge)
+  else vertex1.outgoingEdges.push(edge)
+  state.edges.push(edge)
+  return edge
+}
+
+const drawGraph = () => {
+  for (let vertex of state.initialVertices) {
+    drawVertex(vertex, COLORS.white)
+  }
+  for (let edge of state.initialEdges) {
+    drawEdge(edge, COLORS.white)
+  }
 }
 
 /**
@@ -75,13 +98,28 @@ const insertEdge = (vertex0, vertex1, weight, isDirected) => {
 const drawVertex = (vertex, vertexColor) => {
   state.vertexContext.beginPath()
   state.vertexContext.strokeStyle = vertexColor
+  state.vertexContext.lineWidth = STROKE_WIDTH;
   state.vertexContext.arc(vertex.xPos, vertex.yPos, VERTEX_RADIUS, 0, 2 * Math.PI)
   state.vertexContext.stroke()
-  state.vertexContext.fillStyle = 'white'
-  state.vertexContext.font = '20px Inter'
+  state.vertexContext.fillStyle = COLORS.white
+  state.vertexContext.font = '15pt Inter'
   state.vertexContext.textAlign = 'center'
   state.vertexContext.textBaseline = 'middle'
   state.vertexContext.fillText(vertex.id, vertex.xPos, vertex.yPos)
+  state.vertexContext.stroke()
+}
+
+/**
+ * 
+ * @param {*} vertex 
+ * @param {*} level 
+ */
+const drawVertexLevel = (vertex, level) => {
+  state.vertexContext.font = '8pt Inter'
+  state.vertexContext.fillStyle = COLORS.white
+  state.vertexContext.textAlign = 'center'
+  state.vertexContext.textBaseline = 'middle'
+  state.vertexContext.fillText('Level: ' + level, vertex.xPos, vertex.yPos + 20)
   state.vertexContext.stroke()
 }
 
@@ -122,6 +160,7 @@ const drawEdge = (edge, edgeColor) => {
 
   /** Drawing the edge. */
   state.edgeContext.beginPath()
+  state.edgeContext.lineWidth = STROKE_WIDTH;
   state.edgeContext.strokeStyle = edgeColor
   state.edgeContext.moveTo(x0Pos + lenX, y0Pos + lenY)
   state.edgeContext.lineTo(x1Pos - lenX, y1Pos - lenY)
@@ -151,15 +190,15 @@ const drawEdge = (edge, edgeColor) => {
      * drawing a rectangle.
      */
     state.edgeContext.beginPath()
-    state.edgeContext.fillStyle = '#3B4252'
+    state.edgeContext.fillStyle = COLORS.canvas
     state.edgeContext.fillRect(middleX - 20 / 2, middleY - 20 / 2, 20, 20)
     state.edgeContext.stroke()
 
     /** Drawing the weight text. */
-    state.edgeContext.font = '20px Inter'
+    state.edgeContext.font = '15pt Inter'
     state.edgeContext.textAlign = 'center'
     state.edgeContext.textBaseline = 'middle'
-    state.edgeContext.fillStyle = 'white'
+    state.edgeContext.fillStyle = COLORS.white
     state.edgeContext.fillText(edge.weight, middleX, middleY)
     state.edgeContext.stroke()
   }
@@ -192,23 +231,26 @@ const checkClickedNearVertex = (eventXPos, eventYPos, vertex) =>
 /**
  * 
  */
-const depthFirstSearch = async () => {
+const depthFirstSearchInit = async (startingVertex) => {
+  beforeAlgorithm()
+  await depthFirstSearch(startingVertex)
   for (let v of state.vertices) {
     sleep()
-    if (v.state === VERTEX_STATES.unexplored) await depthFirstSearchRec(v)
+    if (v.state === VERTEX_STATES.unexplored) await depthFirstSearch(v)
   }
+  afterAlgorithm()
 }
 
 /**
  * 
  * @param {*} startingVertex 
  */
-const depthFirstSearchRec = async (startingVertex) => {
+const depthFirstSearch = async (startingVertex) => {
   /** TODO: Figure out state algorithm properly for directed and undirected edges */
   startingVertex.state = VERTEX_STATES.explored
 
   await sleep()
-  drawVertex(startingVertex, 'blue')
+  drawVertex(startingVertex, COLORS.blue)
   await sleep()
 
   for (let e of startingVertex.outgoingEdges) {
@@ -222,14 +264,28 @@ const depthFirstSearchRec = async (startingVertex) => {
 
       if (w.state === VERTEX_STATES.unexplored) {
         e.state = EDGE_STATES.discoveryEdge
-        drawEdge(e, 'green')
-        await depthFirstSearchRec(w)
+        drawEdge(e, COLORS.green)
+        await depthFirstSearch(w)
       } else {
-        drawEdge(e, 'yellow')
+        drawEdge(e, COLORS.yellow)
         e.state = EDGE_STATES.backEdge
       }
     }
   }
+}
+
+const breadthFirstSearchInit = async (startingVertex) => {
+  beforeAlgorithm()
+  await breadthFirstSearch(startingVertex)
+  for (let v of state.vertices) {
+    let i = 0
+    if (v.state === VERTEX_STATES.unexplored) {
+      console.log("HEHEHE " + v.id)
+      console.log(v)
+      await breadthFirstSearch(v)
+    }
+  }
+  afterAlgorithm()
 }
 
 /**
@@ -237,7 +293,50 @@ const depthFirstSearchRec = async (startingVertex) => {
  * @param {*} startingVertex 
  */
 const breadthFirstSearch = async (startingVertex) => {
+  let l = []
+  let l0 = []
+  let i = 0
 
+  startingVertex.state = VERTEX_STATES.explored
+
+  drawVertex(startingVertex, COLORS.blue)
+  drawVertexLevel(startingVertex, i)
+
+  l0.push(startingVertex)
+  l[0] = l0
+
+  while (l[i].length > 0) {
+    let liPlus1 = []
+    l[i + 1] = liPlus1
+    for (let v of l[i]) {
+      await sleep()
+      for (let e of v.outgoingEdges) {
+        if (e.state === EDGE_STATES.unexplored) {
+          /** Opposite edge from the vertex v */
+          let w
+          if (e.vertex0 == v) w = e.vertex1
+          else if (e.vertex1 == v) w = e.vertex0
+
+          if (w.state === VERTEX_STATES.unexplored) {
+            e.state = EDGE_STATES.discoveryEdge
+            w.state = VERTEX_STATES.explored
+            
+            drawEdge(e, COLORS.green)
+            await sleep()
+            drawVertex(w, COLORS.blue)
+            drawVertexLevel(w, i + 1)
+            
+            l[i + 1].push(w)
+          } else {
+            e.state = EDGE_STATES.crossEdge
+            drawEdge(e, COLORS.yellow)
+          }
+          await sleep()
+        }
+      }
+    }
+    i++
+  }
 }
 
 /**
@@ -252,6 +351,7 @@ const sleep = () => new Promise((resolve) => setTimeout(resolve, 500))
  * @returns 
  */
 const handleCanvasClick = (event) => {
+  if (state.algorithmIsRunning) return
   let vertices = state.vertices
   let edges = state.edges
   /**
@@ -277,7 +377,7 @@ const handleCanvasClick = (event) => {
           }
           let weight = document.getElementById('weight-input').value
           let newEdge = insertEdge(state.lastClickedVertex, vertex, weight, false)
-          drawEdge(newEdge, 'white')
+          drawEdge(newEdge, COLORS.white)
           state.clickedOnVertexOnce = false
           state.lastClickedVertex = null
         }
@@ -296,20 +396,74 @@ const handleCanvasClick = (event) => {
     if (checkClickedNearVertex(event.clientX, event.clientY, vertex)) {
       state.clickedOnVertexOnce = false
       state.lastClickedVertex = null
-      console.log('Clicked near vertex')
       return
     }
   }
+
   /** Insert and draw the vertex if no other special cases occured */
   let newVertex = insertVertex(event.clientX, event.clientY)
-  drawVertex(newVertex, 'white')
+  drawVertex(newVertex, COLORS.white)
+}
+
+const backupGraph = () => {
+  state.initialEdges = structuredClone(state.edges)
+  state.initialVertices = structuredClone(state.vertices)
+}
+
+const beforeAlgorithm = () => {
+  backupGraph()
+  clearCanvas()
+  restoreGraph()
+  drawGraph()
+  state.algorithmIsRunning = true
+}
+
+const afterAlgorithm = () => {
+  state.algorithmIsRunning = false
+}
+
+const restoreGraph = () => {
+  state.edges = structuredClone(state.initialEdges)
+  state.vertices = structuredClone(state.initialVertices)
+}
+
+const resetState = () => {
+  state.edges = []
+  state.vertices = []
+  state.initialEdges = []
+  state.initialVertices = []
+  state.clickedOnVertexOnce = false
+  state.currentRunningAlgorithm = null
+  state.lastClickedVertex = null
+  state.currentVertexId = 0
+  state.algorithmIsRunning = false
+}
+
+/**
+ * 
+ */
+const clearCanvas = () => {
+  state.edgeContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
+  state.vertexContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
+}
+
+const clearStartVertexDropdown = () => {
+  let startEdgeSelect = document.getElementById('start-edge-select')
+  while (startEdgeSelect.options.length > 0) startEdgeSelect.remove(0)
+}
+
+const addVertexToStartVertexDropdown = (vertex) => {
+  let startEdgeSelect = document.getElementById('start-edge-select')
+  let option = document.createElement('option')
+  option.value = option.innerHTML = vertex.id
+  startEdgeSelect.add(option)
 }
 
 /**
  * 
  */
 export const init = () => {
-  /** Initialize edge canvas */
+  /** Initializing edge canvas */
   let edgeCanvas = document.getElementById('edge-canvas')
   edgeCanvas.height = window.innerHeight
   edgeCanvas.width = window.innerWidth - CANVAS_X_OFFSET
@@ -323,7 +477,7 @@ export const init = () => {
    */
   edgeCanvas.addEventListener('click', handleCanvasClick)
 
-  /** Initialize vertex canvas */
+  /** Initializing vertex canvas */
   let vertexCanvas = document.getElementById('vertex-canvas')
   vertexCanvas.height = window.innerHeight
   vertexCanvas.width = window.innerWidth - CANVAS_X_OFFSET
@@ -333,11 +487,34 @@ export const init = () => {
 
   /** Initializing DFS button event handler. */
   document.getElementById('dfs-button').addEventListener('click', () => {
-    depthFirstSearch(state.vertices[0])
+    if (state.algorithmIsRunning) return
+    let select = document.getElementById('start-edge-select')
+    let option = select.options[select.selectedIndex].value
+    depthFirstSearchInit(state.vertices[option])
   })
 
   /** Initializing BFS button event handler. */
   document.getElementById('bfs-button').addEventListener('click', () => {
-    breadthFirstSearch(state.vertices[0])
+    if (state.algorithmIsRunning) return
+    let select = document.getElementById('start-edge-select')
+    let option = select.options[select.selectedIndex].value
+    breadthFirstSearchInit(state.vertices[option])
   })
+
+  /** Initializing initial graph button. TODO: Fix */
+  document.getElementById('initial-button').addEventListener('click', () => {
+    if (state.algorithmIsRunning) return
+    clearCanvas()
+    restoreGraph()
+  })
+
+  /** Initializing clear screen button. */
+  document.getElementById('clear-button').addEventListener('click', () => {
+    clearCanvas()
+    clearStartVertexDropdown()
+    resetState()
+  })
+
+  /** Setting disclaimer text. */
+  document.getElementById('disclaimer').innerText = new Date().getFullYear() + ' Amar Tabakovic'
 }

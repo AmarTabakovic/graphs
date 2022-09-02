@@ -1,5 +1,4 @@
 export let state = {
-  currentRunningAlgorithm: null,
   edgeContext: null,
   vertexContext: null,
   vertices: [],
@@ -9,4 +8,6 @@ export let state = {
   currentVertexId: 0,
   clickedOnVertexOnce: false,
   lastClickedVertex: null,
+  canvasGraphRestored: false,
+  algorithmIsRunning: false,
 }
