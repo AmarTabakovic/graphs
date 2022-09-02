@@ -11,3 +11,15 @@ export let state = {
   canvasGraphRestored: false,
   algorithmIsRunning: false,
 }
+
+export const resetState = () => {
+  state.edges = []
+  state.vertices = []
+  state.initialEdges = []
+  state.initialVertices = []
+  state.clickedOnVertexOnce = false
+  state.currentRunningAlgorithm = null
+  state.lastClickedVertex = null
+  state.currentVertexId = 0
+  state.algorithmIsRunning = false
+}

@@ -37,3 +37,10 @@
 - Implement starting vertex dropdown list in the sidebar.
 - Add a second text field in vertex for displaying the level during BFS or the value during Dijkstra's algorithm.
 
+## To Fix
+- `breadthFirstSearchInit` detects a visited vertex as unvisited
+- Restoring a graph to its initial state (before an algorithm is run)
+    - `algorithmWasRun: Boolean` state property
+        - if `false`, then do nothing and just return
+        - else if `true`, then reset the grpah to its state before the algorithm was run
+        and draw that graph to the canvas
