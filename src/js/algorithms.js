@@ -1,22 +1,29 @@
 import { state } from './state'
-import { EDGE_STATES, VERTEX_STATES, COLORS } from './constants'
-import { drawEdge, drawVertex, drawVertexLevel } from './canvas'
+import { drawEdge, drawVertex, drawVertexSubtext, COLORS } from './canvas'
+import { EDGE_STATES } from './edge'
+import { VERTEX_STATES } from './vertex'
 
 /**
+ * Initializes a depth first search from a given starting vertex and
+ * traverses any subsequent unvisited connected components.
  *
+ * @param {Graph} graph graph containing all connected components
+ * @param {Vertex} startingVertex first vertex from which to perform a DFS
  */
-export const depthFirstSearchInit = async (startingVertex) => {
+export const depthFirstSearchInit = async (graph, startingVertex) => {
   beforeAlgorithm()
   await depthFirstSearch(startingVertex)
-  for (let v of state.vertices) {
+  for (let v of graph.vertices) {
     if (v.state === VERTEX_STATES.unexplored) await depthFirstSearch(v)
   }
   afterAlgorithm()
 }
 
 /**
+ * Performs a depth first search of the connected component
+ * from a given starting vertex.
  *
- * @param {*} startingVertex
+ * @param {Vertex} startingVertex vertex to start the DFS from
  */
 const depthFirstSearch = async (startingVertex) => {
   startingVertex.state = VERTEX_STATES.explored
@@ -26,10 +33,11 @@ const depthFirstSearch = async (startingVertex) => {
 
   for (let e of startingVertex.outgoingEdges) {
     if (e.state === EDGE_STATES.unexplored) {
-      /** Opposite edge from the starting vertex */
+      /** Opposite edge from the starting vertex. */
       let w
       if (e.vertex0 == startingVertex) w = e.vertex1
       else if (e.vertex1 == startingVertex) w = e.vertex0
+
       if (w.state === VERTEX_STATES.unexplored) {
         e.state = EDGE_STATES.discoveryEdge
         drawEdge(e, COLORS.green)
@@ -45,15 +53,17 @@ const depthFirstSearch = async (startingVertex) => {
 }
 
 /**
+ * Initializes a breadth first search from a given starting vertex and
+ * traverses any subsequent unvisited connected components.
  *
- * TODO: Fix
- *
- * @param {*} startingVertex
+ * @param {Graph} graph graph containing all connected components
+ * @param {Vertex} startingVertex first vertex from which to perform a BFS
  */
-export const breadthFirstSearchInit = async (startingVertex) => {
+export const breadthFirstSearchInit = async (graph, startingVertex) => {
   beforeAlgorithm()
   await breadthFirstSearch(startingVertex)
-  for (let v of state.vertices) {
+
+  for (let v of graph.vertices) {
     if (v.state === VERTEX_STATES.unexplored) {
       await breadthFirstSearch(v)
     }
@@ -62,18 +72,23 @@ export const breadthFirstSearchInit = async (startingVertex) => {
 }
 
 /**
+ * Performs a depth first search of the connected component
+ * from a given starting vertex.
  *
- * @param {*} startingVertex
+ * @param {Vertex} startingVertex vertex to start the BFS from
  */
 const breadthFirstSearch = async (startingVertex) => {
+  /** List containing lists for each level. */
   let l = []
+
+  /** List of level 0. */
   let l0 = []
   let i = 0
 
   startingVertex.state = VERTEX_STATES.explored
 
   drawVertex(startingVertex, COLORS.blue)
-  drawVertexLevel(startingVertex, i)
+  drawVertexSubtext(startingVertex, 'Level: ' + i)
   await sleep()
 
   l0.push(startingVertex)
@@ -98,7 +113,7 @@ const breadthFirstSearch = async (startingVertex) => {
             await sleep()
 
             drawVertex(w, COLORS.blue)
-            drawVertexLevel(w, i + 1)
+            drawVertexSubtext(w, 'Level: ' + (i + 1))
             await sleep()
 
             l[i + 1].push(w)
@@ -114,23 +129,30 @@ const breadthFirstSearch = async (startingVertex) => {
   }
 }
 
-export const dijkstrasAlgorithm = async (startingVertex) => {}
+/**
+ * Runs Dijkstra's algorithm.
+ *
+ * @param {Graph} Graph graph containing all connected components
+ * @param {Vertex} startingVertex vertex to start Dijkstra's algorithm from
+ */
+export const dijkstrasAlgorithm = async (graph, startingVertex) => {}
 
 /**
- *
+ * Runs before an algorithm starts running.
  */
 const beforeAlgorithm = () => {
   state.algorithmIsRunning = true
 }
 
 /**
- *
+ * Runs after an algorithm has finished running.
  */
 const afterAlgorithm = () => {
   state.algorithmIsRunning = false
 }
 
 /**
+ * Returns a new Promise
  *
  * @returns
  */

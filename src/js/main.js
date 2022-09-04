@@ -1,12 +1,13 @@
-import { CANVAS_X_OFFSET } from './constants'
-import { handleCanvasClick } from './canvas'
+import { handleCanvasClick, CANVAS_X_OFFSET, clearCanvas } from './canvas'
 import { depthFirstSearchInit, breadthFirstSearchInit, dijkstrasAlgorithm } from './algorithms'
-import { clearCanvas } from './canvas'
 import { state, resetState } from './state'
 import { clearStartVertexDropdown } from './ui'
+import { Graph } from './graph'
+
+let graph = new Graph()
 
 /**
- *
+ * Initializes the application
  */
 export const init = () => {
   /** Initializing edge canvas */
@@ -21,7 +22,7 @@ export const init = () => {
    * Use the edge canvas (which lies on top of the vertex canvas)
    * to catch and handle click events.
    */
-  edgeCanvas.addEventListener('click', handleCanvasClick)
+  edgeCanvas.addEventListener('click', () => handleCanvasClick(event, graph))
 
   /** Initializing vertex canvas */
   let vertexCanvas = document.getElementById('vertex-canvas')
@@ -39,7 +40,7 @@ export const init = () => {
     let select = document.getElementById('start-vertex-select')
     let option = select.options[select.selectedIndex].value
 
-    depthFirstSearchInit(state.vertices[option])
+    depthFirstSearchInit(graph, graph.vertices[option])
   })
 
   /** Initializing BFS button event handler. */
@@ -50,7 +51,7 @@ export const init = () => {
     let select = document.getElementById('start-vertex-select')
     let option = select.options[select.selectedIndex].value
 
-    breadthFirstSearchInit(state.vertices[option])
+    breadthFirstSearchInit(graph, graph.vertices[option])
   })
 
   /** Initializing Dijkstra's algorithm button event handler. */
@@ -90,6 +91,7 @@ export const init = () => {
     clearCanvas()
     clearStartVertexDropdown()
     resetState()
+    graph = new Graph()
   })
 
   /** Setting disclaimer text. */
