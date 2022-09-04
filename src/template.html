@@ -13,51 +13,81 @@
 
 <body>
     <div id="root">
-        <div id="sidebar">
-            <h1>Graphs</h1>
+        <p id="mobile-message">This is currently not supported on mobile devices.</p>
+        <div id="app">
+            <div id="sidebar">
+                <div id="sidebar-inner">
+                    <h1>Graphs</h1>
 
-            <h2>Basic Usage</h2>
-            <ul>
-                <li>To add a vertex, click anywhere on the right half of the screen.</li>
-                <li>
-                    To add an edge, enter the weight of the edge below and set whether the edge is directed or not and
-                    click on two vertices afterwards.
-                    <ul>
-                        <li>Weight = 0 is the same as an unweighted edge.</li>
-                        <li>Duplicate edges and self-loops are not allowed.</li>
-                    </ul>
-                </li>
-            </ul>
+                    <div class="sidebar-group">
+                        <ul>
+                            <li>To add a vertex, click anywhere on the right half of the screen.</li>
+                            <li>
+                                To add an edge, enter the weight of the edge below and set whether the edge is directed
+                                or
+                                not
+                                and
+                                click on two vertices afterwards.
+                                <ul>
+                                    <li>Weight = 0 is the same as an unweighted edge.</li>
+                                    <li>Duplicate edges and self-loops are not allowed.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-group">
 
-            <h2>Edge Settings</h2>
-            <label for="weight">Weight</label>
-            <input type="number" name="weight" id="weight-input" value=0 />
+                        <h3>Edge Settings</h3>
 
-            <input type="radio" value="Undirected" name="edge-type" checked />
-            <label for="edge-type">Undirected edge</label>
+                        <div class="form-element">
+                            <label for="weight">Weight</label>
+                            <input type="number" name="weight" id="weight-input" value=0 />
+                        </div>
+                        <div class="form-element">
+                            <label>Edge type</label>
+                            <input type="radio" value="Undirected" name="edge-type" checked />
+                            <label class="inline" for="edge-type">Undirected edge</label>
+                            <input type="radio" value="Directed" name="edge-type" />
+                            <label class="inline" for="edge-type">Directed edge</label>
+                        </div>
 
-            <input type="radio" value="Directed" name="edge-type" />
-            <label for="edge-type">Directed edge</label>
+                    </div>
+                    <div class="sidebar-group">
+                        <h3>Algorithms</h3>
+                        <div class="form-element">
+                            <label for="weight">Starting vertex</label>
+                            <select name="start-vertex" id="start-vertex-select"></select>
+                        </div>
+                        <div class="form-element">
+                            <label>Run an algorithm</label>
+                            <button id="dfs-button">DFS</button>
+                            <button id="bfs-button">BFS</button>
 
-            <h2>Algorithms</h2>
-            <label for="weight">Starting edge</label>
-            <select name="start-edge" id="start-edge-select"></select>
-
-            <button id="dfs-button">DFS</button>
-            <button id="bfs-button">BFS</button>
-            <button id="dijkstra-button">Dijkstra's Algorithm</button>
-
-            <h2>Screen</h2>
-            <button id="initial-button">Initial graph</button>
-            <button id="clear-button">Clear screen</button>
-
-            <div id="footer">
-                <p id="disclaimer"></p>
+                            <!-- Not yet implemented. -->
+                            <button id="dijkstras-button">Dijkstra's Algorithm</button>
+                        </div>
+                    </div>
+                    <div class="sidebar-group">
+                        <h3>Screen</h3>
+                        <div class="form-element">
+                            <label for="speed-range">Visualization speed</label>
+                            <input id="speed-slider" name="speed-range" type="range">
+                        </div>
+                        <div class="form-element">
+                            <!-- Not yet implemented. -->
+                            <!-- <button id="initial-button">Initial graph</button> -->
+                            <button id="clear-button">Clear screen</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="footer">
+                    <p id="disclaimer"></p>
+                </div>
             </div>
-        </div>
-        <div id="graph-screen">
-            <canvas id="edge-canvas"></canvas>
-            <canvas id="vertex-canvas"></canvas>
+            <div id="graph-screen">
+                <canvas id="edge-canvas"></canvas>
+                <canvas id="vertex-canvas"></canvas>
+            </div>
         </div>
     </div>
 </body>

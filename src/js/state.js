@@ -10,6 +10,7 @@ export let state = {
   lastClickedVertex: null,
   canvasGraphRestored: false,
   algorithmIsRunning: false,
+  visualizationSpeed: 500,
 }
 
 export const resetState = () => {

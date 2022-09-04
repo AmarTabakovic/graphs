@@ -14,13 +14,25 @@ body {
     flex-direction: row;
     color: var(--light);
     font-family: Inter, sans-serif;
+    font-size: 0.9rem;;
+}
+
+h1, h2 {
+    margin-top: 0.2rem;
 }
 
 #sidebar {
-    width: 400px;
-    height: 100%;
+    width: var(--sidebar-width);
     background-color: var(--darkest);
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+}
+
+#sidebar-inner {
+    padding: 10px;
 }
 
 canvas {
@@ -41,7 +53,12 @@ canvas {
 
 #footer {
     width: 400px;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     text-align: center;
+    background-color: var(--darkest);
+}
+
+.sidebar-group {
+    margin-bottom: 20px;
 }

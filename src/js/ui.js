@@ -2,8 +2,8 @@
  * 
  */
 export const clearStartVertexDropdown = () => {
-  let startEdgeSelect = document.getElementById('start-edge-select')
-  while (startEdgeSelect.options.length > 0) startEdgeSelect.remove(0)
+  let startVertexSelect = document.getElementById('start-vertex-select')
+  while (startVertexSelect.options.length > 0) startVertexSelect.remove(0)
 }
 
 /**
@@ -11,8 +11,8 @@ export const clearStartVertexDropdown = () => {
  * @param {*} vertex 
  */
 export const addVertexToStartVertexDropdown = (vertex) => {
-  let startEdgeSelect = document.getElementById('start-edge-select')
+  let startVertexSelect = document.getElementById('start-vertex-select')
   let option = document.createElement('option')
   option.value = option.innerHTML = vertex.id
-  startEdgeSelect.add(option)
+  startVertexSelect.add(option)
 }

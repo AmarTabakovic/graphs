@@ -1,5 +1,5 @@
 import { state } from './state'
-import * as constants from './constants'
+import { STROKE_WIDTH, COLORS, VERTEX_RADIUS, CANVAS_X_OFFSET } from './constants'
 import { insertVertex, insertEdge } from './graph'
 import { addVertexToStartVertexDropdown } from './ui'
 
@@ -8,10 +8,10 @@ import { addVertexToStartVertexDropdown } from './ui'
  */
 export const drawGraph = () => {
   for (let vertex of state.initialVertices) {
-    drawVertex(vertex, constants.COLORS.white)
+    drawVertex(vertex, COLORS.white)
   }
   for (let edge of state.initialEdges) {
-    drawEdge(edge, constants.COLORS.white)
+    drawEdge(edge, COLORS.white)
   }
 }
 
@@ -23,10 +23,10 @@ export const drawGraph = () => {
 export const drawVertex = (vertex, vertexColor) => {
   state.vertexContext.beginPath()
   state.vertexContext.strokeStyle = vertexColor
-  state.vertexContext.lineWidth = constants.STROKE_WIDTH
-  state.vertexContext.arc(vertex.xPos, vertex.yPos, constants.VERTEX_RADIUS, 0, 2 * Math.PI)
+  state.vertexContext.lineWidth = STROKE_WIDTH
+  state.vertexContext.arc(vertex.xPos, vertex.yPos, VERTEX_RADIUS, 0, 2 * Math.PI)
   state.vertexContext.stroke()
-  state.vertexContext.fillStyle = constants.COLORS.white
+  state.vertexContext.fillStyle = COLORS.white
   state.vertexContext.font = '15pt Inter'
   state.vertexContext.textAlign = 'center'
   state.vertexContext.textBaseline = 'middle'
@@ -41,7 +41,7 @@ export const drawVertex = (vertex, vertexColor) => {
  */
 export const drawVertexLevel = (vertex, level) => {
   state.vertexContext.font = '8pt Inter'
-  state.vertexContext.fillStyle = constants.COLORS.white
+  state.vertexContext.fillStyle = COLORS.white
   state.vertexContext.textAlign = 'center'
   state.vertexContext.textBaseline = 'middle'
   state.vertexContext.fillText('Level: ' + level, vertex.xPos, vertex.yPos + 20)
@@ -78,14 +78,14 @@ export const drawEdge = (edge, edgeColor) => {
    * Adding lenX and lenY to the center of the circle shifts
    * the starting position of the edge by a distance of r.
    */
-  let lenX = Math.cos(theta) * constants.VERTEX_RADIUS
-  let lenY = Math.sin(theta) * constants.VERTEX_RADIUS
+  let lenX = Math.cos(theta) * VERTEX_RADIUS
+  let lenY = Math.sin(theta) * VERTEX_RADIUS
   let middleX = (x0Pos + x1Pos) / 2
   let middleY = (y0Pos + y1Pos) / 2
 
   /** Drawing the edge. */
   state.edgeContext.beginPath()
-  state.edgeContext.lineWidth = constants.STROKE_WIDTH
+  state.edgeContext.lineWidth = STROKE_WIDTH
   state.edgeContext.strokeStyle = edgeColor
   state.edgeContext.moveTo(x0Pos + lenX, y0Pos + lenY)
   state.edgeContext.lineTo(x1Pos - lenX, y1Pos - lenY)
@@ -115,7 +115,7 @@ export const drawEdge = (edge, edgeColor) => {
      * drawing a rectangle.
      */
     state.edgeContext.beginPath()
-    state.edgeContext.fillStyle = constants.COLORS.canvas
+    state.edgeContext.fillStyle = COLORS.canvas
     state.edgeContext.fillRect(middleX - 20 / 2, middleY - 20 / 2, 20, 20)
     state.edgeContext.stroke()
 
@@ -123,7 +123,7 @@ export const drawEdge = (edge, edgeColor) => {
     state.edgeContext.font = '15pt Inter'
     state.edgeContext.textAlign = 'center'
     state.edgeContext.textBaseline = 'middle'
-    state.edgeContext.fillStyle = constants.COLORS.white
+    state.edgeContext.fillStyle = COLORS.white
     state.edgeContext.fillText(edge.weight, middleX, middleY)
     state.edgeContext.stroke()
   }
@@ -137,9 +137,9 @@ export const drawEdge = (edge, edgeColor) => {
  * @returns
  */
 const checkClickedOnVertex = (eventXPos, eventYPos, vertex) =>
-  Math.pow(eventXPos - constants.CANVAS_X_OFFSET - vertex.xPos, 2) +
+  Math.pow(eventXPos - CANVAS_X_OFFSET - vertex.xPos, 2) +
     Math.pow(eventYPos - vertex.yPos, 2) <=
-  constants.VERTEX_RADIUS * constants.VERTEX_RADIUS
+  VERTEX_RADIUS * VERTEX_RADIUS
 
 /**
  *
@@ -149,10 +149,10 @@ const checkClickedOnVertex = (eventXPos, eventYPos, vertex) =>
  * @returns
  */
 const checkClickedNearVertex = (eventXPos, eventYPos, vertex) =>
-  eventXPos - constants.CANVAS_X_OFFSET <= vertex.xPos + 2 * constants.VERTEX_RADIUS &&
-  eventXPos - constants.CANVAS_X_OFFSET >= vertex.xPos - 2 * constants.VERTEX_RADIUS &&
-  eventYPos <= vertex.yPos + 2 * constants.VERTEX_RADIUS &&
-  eventYPos >= vertex.yPos - 2 * constants.VERTEX_RADIUS
+  eventXPos - CANVAS_X_OFFSET <= vertex.xPos + 2 * VERTEX_RADIUS &&
+  eventXPos - CANVAS_X_OFFSET >= vertex.xPos - 2 * VERTEX_RADIUS &&
+  eventYPos <= vertex.yPos + 2 * VERTEX_RADIUS &&
+  eventYPos >= vertex.yPos - 2 * VERTEX_RADIUS
 
 /**
  *
@@ -184,9 +184,10 @@ export const handleCanvasClick = (event) => {
               return
             }
           }
-          let weight = document.getElementById('weight-input').value
+          let weight = parseInt(document.getElementById('weight-input').value)
+          if (isNaN(weight)) weight = 0
           let newEdge = insertEdge(state.lastClickedVertex, vertex, weight, false)
-          drawEdge(newEdge, constants.COLORS.white)
+          drawEdge(newEdge, COLORS.white)
           state.clickedOnVertexOnce = false
           state.lastClickedVertex = null
         }
@@ -212,7 +213,7 @@ export const handleCanvasClick = (event) => {
   /** Insert and draw the vertex if no other special cases occured */
   let newVertex = insertVertex(event.clientX, event.clientY)
   addVertexToStartVertexDropdown(newVertex)
-  drawVertex(newVertex, constants.COLORS.white)
+  drawVertex(newVertex, COLORS.white)
 }
 
 /**
@@ -222,13 +223,13 @@ export const clearCanvas = () => {
   state.edgeContext.clearRect(
     0,
     0,
-    window.innerWidth - constants.CANVAS_X_OFFSET,
+    window.innerWidth - CANVAS_X_OFFSET,
     window.innerHeight
   )
   state.vertexContext.clearRect(
     0,
     0,
-    window.innerWidth - constants.CANVAS_X_OFFSET,
+    window.innerWidth - CANVAS_X_OFFSET,
     window.innerHeight
   )
 }

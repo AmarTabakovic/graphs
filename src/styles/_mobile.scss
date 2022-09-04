@@ -1,0 +1,20 @@
+#mobile-message {
+    display: none;
+    padding-top: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+#app {
+    display: block;
+}
+
+@media screen and (max-width: 800px), (max-height: 795px) {
+    #mobile-message {
+        display: block;
+    }
+
+    #app {
+        display: none;
+    }
+}

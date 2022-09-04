@@ -9,7 +9,6 @@ export const depthFirstSearchInit = async (startingVertex) => {
   beforeAlgorithm()
   await depthFirstSearch(startingVertex)
   for (let v of state.vertices) {
-    sleep()
     if (v.state === VERTEX_STATES.unexplored) await depthFirstSearch(v)
   }
   afterAlgorithm()
@@ -20,10 +19,8 @@ export const depthFirstSearchInit = async (startingVertex) => {
  * @param {*} startingVertex
  */
 const depthFirstSearch = async (startingVertex) => {
-  /** TODO: Figure out state algorithm properly for directed and undirected edges */
   startingVertex.state = VERTEX_STATES.explored
 
-  await sleep()
   drawVertex(startingVertex, COLORS.blue)
   await sleep()
 
@@ -33,16 +30,15 @@ const depthFirstSearch = async (startingVertex) => {
       let w
       if (e.vertex0 == startingVertex) w = e.vertex1
       else if (e.vertex1 == startingVertex) w = e.vertex0
-
-      await sleep()
-
       if (w.state === VERTEX_STATES.unexplored) {
         e.state = EDGE_STATES.discoveryEdge
         drawEdge(e, COLORS.green)
+        await sleep()
         await depthFirstSearch(w)
       } else {
-        drawEdge(e, COLORS.yellow)
         e.state = EDGE_STATES.backEdge
+        drawEdge(e, COLORS.yellow)
+        await sleep()
       }
     }
   }
@@ -78,6 +74,7 @@ const breadthFirstSearch = async (startingVertex) => {
 
   drawVertex(startingVertex, COLORS.blue)
   drawVertexLevel(startingVertex, i)
+  await sleep()
 
   l0.push(startingVertex)
   l[0] = l0
@@ -86,7 +83,6 @@ const breadthFirstSearch = async (startingVertex) => {
     let liPlus1 = []
     l[i + 1] = liPlus1
     for (let v of l[i]) {
-      await sleep()
       for (let e of v.outgoingEdges) {
         if (e.state === EDGE_STATES.unexplored) {
           /** Opposite edge from the vertex v */
@@ -100,20 +96,26 @@ const breadthFirstSearch = async (startingVertex) => {
 
             drawEdge(e, COLORS.green)
             await sleep()
+
             drawVertex(w, COLORS.blue)
             drawVertexLevel(w, i + 1)
+            await sleep()
 
             l[i + 1].push(w)
           } else {
             e.state = EDGE_STATES.crossEdge
             drawEdge(e, COLORS.yellow)
+            await sleep()
           }
-          await sleep()
         }
       }
     }
     i++
   }
+}
+
+export const dijkstrasAlgorithm = async (startingVertex) => {
+
 }
 
 /**
@@ -134,4 +136,4 @@ const afterAlgorithm = () => {
  *
  * @returns
  */
-const sleep = () => new Promise((resolve) => setTimeout(resolve, 500))
+const sleep = () => new Promise((resolve) => setTimeout(resolve, state.visualizationSpeed))

@@ -1,5 +1,5 @@
 import { state } from './state'
-import * as constants from './constants'
+import { CANVAS_X_OFFSET, VERTEX_STATES, EDGE_STATES } from './constants'
 
 /**
  *
@@ -10,12 +10,12 @@ import * as constants from './constants'
 export const insertVertex = (xPos, yPos) => {
   /** Creating vertex list entry */
   let vertex = {
-    xPos: xPos - constants.CANVAS_X_OFFSET,
+    xPos: xPos - CANVAS_X_OFFSET,
     yPos: yPos,
     id: state.currentVertexId,
     incomingEdges: [],
     outgoingEdges: [],
-    state: constants.VERTEX_STATES.unexplored,
+    state: VERTEX_STATES.unexplored,
   }
   state.vertices.push(vertex)
   state.initialVertices.push(vertex)
@@ -33,19 +33,18 @@ export const insertVertex = (xPos, yPos) => {
  * @returns
  */
 export const insertEdge = (vertex0, vertex1, weight, isDirected) => {
+  /** No negative weights allowed. */
+  if (weight < 0) weight = 0;
+
   /** Creating edge list entry */
   let edge = {
     vertex0: vertex0,
     vertex1: vertex1,
     isDirected: isDirected,
     weight: weight,
-    state: constants.EDGE_STATES.unexplored,
+    state: EDGE_STATES.unexplored,
   }
-  /**
-   * Adding the new edge to the adjacency lists of both vertices.
-   *
-   * TODO: Handle undirected edges case.
-   */
+  /** Adding the new edge to the adjacency lists of both vertices. */
   vertex0.outgoingEdges.push(edge)
   if (isDirected) vertex1.incomingEdges.push(edge)
   else vertex1.outgoingEdges.push(edge)
