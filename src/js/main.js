@@ -53,10 +53,10 @@ export const init = () => {
     breadthFirstSearchInit(state.vertices[option])
   })
 
-   /** Initializing Dijkstra's algorithm button event handler. */
-   // document.getElementById('dijkstras-button').addEventListener('click', () => { 
-    /** Do not do anything if an algorithm is already running. */
-    /* if (state.algorithmIsRunning) return
+  /** Initializing Dijkstra's algorithm button event handler. */
+  // document.getElementById('dijkstras-button').addEventListener('click', () => {
+  /** Do not do anything if an algorithm is already running. */
+  /* if (state.algorithmIsRunning) return
 
     let select = document.getElementById('start-vertex-select')
     let option = select.options[select.selectedIndex].value
@@ -64,26 +64,25 @@ export const init = () => {
     dijkstrasAlgorithm(state.vertices[option])
   }) */
 
-
   /** Initializing visualization speed slider. */
   let slider = document.getElementById('speed-slider')
   const sliderMax = 1000
   slider.min = 10
   slider.max = sliderMax
   slider.value = sliderMax - state.visualizationSpeed
-  slider.addEventListener("input", () => {
+  slider.addEventListener('input', () => {
     state.speed = sliderMax - slider.value
   })
 
   /** Initializing initial graph button. TODO: Implement */
   // document.getElementById('initial-button').addEventListener('click', () => {
-    /** Do not do anything if an algorithm is already running. */
-    // if (state.algorithmIsRunning) return
-    /** 
-     * 1. Set the graph state to be before the algorithm was run.
-     * 2. Clear the canvas.
-     * 3. Render the graph using drawGraph().
-     */
+  /** Do not do anything if an algorithm is already running. */
+  // if (state.algorithmIsRunning) return
+  /**
+   * 1. Set the graph state to be before the algorithm was run.
+   * 2. Clear the canvas.
+   * 3. Render the graph using drawGraph().
+   */
   // })
 
   /** Initializing clear screen button. */

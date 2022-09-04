@@ -4,7 +4,7 @@ import { insertVertex, insertEdge } from './graph'
 import { addVertexToStartVertexDropdown } from './ui'
 
 /**
- * 
+ *
  */
 export const drawGraph = () => {
   for (let vertex of state.initialVertices) {
@@ -137,8 +137,7 @@ export const drawEdge = (edge, edgeColor) => {
  * @returns
  */
 const checkClickedOnVertex = (eventXPos, eventYPos, vertex) =>
-  Math.pow(eventXPos - CANVAS_X_OFFSET - vertex.xPos, 2) +
-    Math.pow(eventYPos - vertex.yPos, 2) <=
+  Math.pow(eventXPos - CANVAS_X_OFFSET - vertex.xPos, 2) + Math.pow(eventYPos - vertex.yPos, 2) <=
   VERTEX_RADIUS * VERTEX_RADIUS
 
 /**
@@ -220,16 +219,6 @@ export const handleCanvasClick = (event) => {
  *
  */
 export const clearCanvas = () => {
-  state.edgeContext.clearRect(
-    0,
-    0,
-    window.innerWidth - CANVAS_X_OFFSET,
-    window.innerHeight
-  )
-  state.vertexContext.clearRect(
-    0,
-    0,
-    window.innerWidth - CANVAS_X_OFFSET,
-    window.innerHeight
-  )
+  state.edgeContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
+  state.vertexContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
 }

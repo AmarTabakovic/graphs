@@ -34,7 +34,7 @@ export const insertVertex = (xPos, yPos) => {
  */
 export const insertEdge = (vertex0, vertex1, weight, isDirected) => {
   /** No negative weights allowed. */
-  if (weight < 0) weight = 0;
+  if (weight < 0) weight = 0
 
   /** Creating edge list entry */
   let edge = {

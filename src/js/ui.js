@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 export const clearStartVertexDropdown = () => {
   let startVertexSelect = document.getElementById('start-vertex-select')
@@ -7,8 +7,8 @@ export const clearStartVertexDropdown = () => {
 }
 
 /**
- * 
- * @param {*} vertex 
+ *
+ * @param {*} vertex
  */
 export const addVertexToStartVertexDropdown = (vertex) => {
   let startVertexSelect = document.getElementById('start-vertex-select')

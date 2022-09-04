@@ -45,10 +45,10 @@ const depthFirstSearch = async (startingVertex) => {
 }
 
 /**
- * 
+ *
  * TODO: Fix
- * 
- * @param {*} startingVertex 
+ *
+ * @param {*} startingVertex
  */
 export const breadthFirstSearchInit = async (startingVertex) => {
   beforeAlgorithm()
@@ -114,19 +114,17 @@ const breadthFirstSearch = async (startingVertex) => {
   }
 }
 
-export const dijkstrasAlgorithm = async (startingVertex) => {
-
-}
+export const dijkstrasAlgorithm = async (startingVertex) => {}
 
 /**
- * 
+ *
  */
 const beforeAlgorithm = () => {
   state.algorithmIsRunning = true
 }
 
 /**
- * 
+ *
  */
 const afterAlgorithm = () => {
   state.algorithmIsRunning = false
