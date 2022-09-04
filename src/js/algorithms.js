@@ -134,4 +134,4 @@ const afterAlgorithm = () => {
  *
  * @returns
  */
-const sleep = () => new Promise((resolve) => setTimeout(resolve, state.visualizationSpeed))
+const sleep = () => new Promise((resolve) => setTimeout(resolve, state.visualizationDelay))

@@ -69,9 +69,9 @@ export const init = () => {
   const sliderMax = 1000
   slider.min = 10
   slider.max = sliderMax
-  slider.value = sliderMax - state.visualizationSpeed
+  slider.value = sliderMax - state.visualizationDelay
   slider.addEventListener('input', () => {
-    state.speed = sliderMax - slider.value
+    state.visualizationDelay = sliderMax - slider.value
   })
 
   /** Initializing initial graph button. TODO: Implement */
