@@ -44,10 +44,10 @@ const FONT_SIZE_SMALL = '8pt'
  * @param {Graph} graph graph to be drawn
  */
 const drawGraph = (graph) => {
-  for (let vertex of graph.vertices) {
+  for (const vertex of graph.vertices) {
     drawVertex(vertex, COLORS.white)
   }
-  for (let edge of graph.edges) {
+  for (const edge of graph.edges) {
     drawEdge(edge, COLORS.white)
   }
 }
@@ -59,7 +59,7 @@ const drawGraph = (graph) => {
  * @param {COLORS} vertexColor color of the vertex
  */
 const drawVertex = (vertex, vertexColor) => {
-  let vertexContext = state.vertexContext
+  const vertexContext = state.vertexContext
 
   vertexContext.beginPath()
   vertexContext.strokeStyle = vertexColor
@@ -84,7 +84,7 @@ const drawVertex = (vertex, vertexColor) => {
  * @param {string} subtext subtext to be drawn
  */
 const drawVertexSubtext = (vertex, subtext) => {
-  let vertexContext = state.vertexContext
+  const vertexContext = state.vertexContext
 
   vertexContext.font = FONT_SIZE_SMALL + ' ' + FONT_FAMILY
   vertexContext.fillStyle = COLORS.white
@@ -101,15 +101,15 @@ const drawVertexSubtext = (vertex, subtext) => {
  * @param {COLORS} edgeColor color of the edge
  */
 const drawEdge = (edge, edgeColor) => {
-  let edgeContext = state.edgeContext
+  const edgeContext = state.edgeContext
 
-  let x0Pos = edge.vertex0.xPos
-  let y0Pos = edge.vertex0.yPos
-  let x1Pos = edge.vertex1.xPos
-  let y1Pos = edge.vertex1.yPos
+  const x0Pos = edge.vertex0.xPos
+  const y0Pos = edge.vertex0.yPos
+  const x1Pos = edge.vertex1.xPos
+  const y1Pos = edge.vertex1.yPos
 
   /** Get the angle theta between the two points (x0, y0) and (x1, y1). */
-  let theta = Math.atan2(y1Pos - y0Pos, x1Pos - x0Pos)
+  const theta = Math.atan2(y1Pos - y0Pos, x1Pos - x0Pos)
 
   /**
    * Calculate the lengths of the triangle sides in order for the
@@ -129,10 +129,10 @@ const drawEdge = (edge, edgeColor) => {
    * Adding lenX and lenY to the center of the circle shifts
    * the starting position of the edge by a distance of r.
    */
-  let lenX = Math.cos(theta) * VERTEX_RADIUS
-  let lenY = Math.sin(theta) * VERTEX_RADIUS
-  let middleX = (x0Pos + x1Pos) / 2
-  let middleY = (y0Pos + y1Pos) / 2
+  const lenX = Math.cos(theta) * VERTEX_RADIUS
+  const lenY = Math.sin(theta) * VERTEX_RADIUS
+  const middleX = (x0Pos + x1Pos) / 2
+  const middleY = (y0Pos + y1Pos) / 2
 
   /** Drawing the edge. */
   edgeContext.beginPath()
@@ -146,12 +146,10 @@ const drawEdge = (edge, edgeColor) => {
   if (edge.isDirected) {
     //edgeContext.fillStyle = edgeColor
     //edgeContext.beginPath()
-
     /** First part of the arrowhead. */
     //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
     //edgeContext.lineTo()
     //edgeContext.stroke()
-
     /** Second part of the arrowhead. */
     //edgeContext.beginPath()
     //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
@@ -222,20 +220,20 @@ const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
  */
 const handleCanvasClick = (event, graph) => {
   if (state.algorithmIsRunning) return
-  let vertices = graph.vertices
-  let edges = graph.edges
+  const vertices = graph.vertices
+  const edges = graph.edges
 
   /**
    * First iteration: check whether a vertex has been clicked on
    * and handle the event accordingly.
    */
-  for (let vertex of vertices) {
+  for (const vertex of vertices) {
     if (checkCoordsOnVertex(event.clientX - CANVAS_X_OFFSET, event.clientY, vertex)) {
       if (state.lastClickedVertex != null) {
         if (state.lastClickedVertex == vertex) {
           state.lastClickedVertex = null
         } else {
-          for (let edge of edges) {
+          for (const edge of edges) {
             if (
               (edge.vertex0.id === vertex.id && edge.vertex1.id === state.lastClickedVertex.id) ||
               (edge.vertex0.id === state.lastClickedVertex.id && edge.vertex1.id === vertex.id)
@@ -244,8 +242,8 @@ const handleCanvasClick = (event, graph) => {
               return
             }
           }
-          let weight = parseInt(document.getElementById('weight-input').value)
-          let newEdge = new Edge(state.lastClickedVertex, vertex, weight, false)
+          const weight = parseInt(document.getElementById('weight-input').value)
+          const newEdge = new Edge(state.lastClickedVertex, vertex, weight, false)
           graph.insertEdge(newEdge)
           drawEdge(newEdge, COLORS.white)
 
@@ -261,7 +259,7 @@ const handleCanvasClick = (event, graph) => {
    * Second iteration: check whether a click event occured near a vertex
    * in order to avoid grouping different vertices too close to each other.
    */
-  for (let vertex of vertices) {
+  for (const vertex of vertices) {
     if (checkCoordsNearVertex(event.clientX - CANVAS_X_OFFSET, event.clientY, vertex)) {
       state.lastClickedVertex = null
       return
@@ -269,7 +267,11 @@ const handleCanvasClick = (event, graph) => {
   }
 
   /** Insert and draw the vertex if no other special cases occured */
-  let newVertex = new Vertex(event.clientX - CANVAS_X_OFFSET, event.clientY, graph.currentVertexId)
+  const newVertex = new Vertex(
+    event.clientX - CANVAS_X_OFFSET,
+    event.clientY,
+    graph.currentVertexId
+  )
   graph.insertVertex(newVertex)
   addVertexToStartVertexDropdown(newVertex)
   drawVertex(newVertex, COLORS.white)

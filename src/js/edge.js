@@ -3,7 +3,7 @@
  *
  * @enum {string}
  */
-export const EDGE_STATES = {
+const EDGE_STATES = {
   unexplored: 'unexplored',
   discoveryEdge: 'discoveryEdge',
   backEdge: 'backEdge',
@@ -13,7 +13,7 @@ export const EDGE_STATES = {
 /**
  * Represents a single graph edge.
  */
-export class Edge {
+class Edge {
   /**
    * Constructor method.
    *
@@ -39,3 +39,5 @@ export class Edge {
     else vertex1.outgoingEdges.push(this)
   }
 }
+
+export { EDGE_STATES, Edge }

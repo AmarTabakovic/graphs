@@ -3,7 +3,7 @@
  *
  * TODO: Yeah, yeah, global vars are the source of evil hurr durr...
  */
-export let state = {
+const state = {
   edgeContext: null,
   vertexContext: null,
   currentVertexId: 0,
@@ -16,10 +16,12 @@ export let state = {
 /**
  * Resets the state of the application except for the canvas contexts.
  */
-export const resetState = () => {
+const resetState = () => {
   state.clickedOnVertexOnce = false
   state.currentRunningAlgorithm = null
   state.lastClickedVertex = null
   state.currentVertexId = 0
   state.algorithmIsRunning = false
 }
+
+export { state, resetState }

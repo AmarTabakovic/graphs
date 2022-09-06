@@ -10,10 +10,10 @@ import { VERTEX_STATES } from './vertex'
  * @param {Graph} graph graph containing all connected components
  * @param {Vertex} startingVertex first vertex from which to perform a DFS
  */
-export const depthFirstSearchInit = async (graph, startingVertex) => {
+const depthFirstSearchInit = async (graph, startingVertex) => {
   beforeAlgorithm()
   await depthFirstSearch(startingVertex)
-  for (let v of graph.vertices) {
+  for (const v of graph.vertices) {
     if (v.state === VERTEX_STATES.unexplored) await depthFirstSearch(v)
   }
   afterAlgorithm()
@@ -31,7 +31,7 @@ const depthFirstSearch = async (startingVertex) => {
   drawVertex(startingVertex, COLORS.blue)
   await sleep()
 
-  for (let e of startingVertex.outgoingEdges) {
+  for (const e of startingVertex.outgoingEdges) {
     if (e.state === EDGE_STATES.unexplored) {
       /** Opposite edge from the starting vertex. */
       let w
@@ -59,11 +59,11 @@ const depthFirstSearch = async (startingVertex) => {
  * @param {Graph} graph graph containing all connected components
  * @param {Vertex} startingVertex first vertex from which to perform a BFS
  */
-export const breadthFirstSearchInit = async (graph, startingVertex) => {
+const breadthFirstSearchInit = async (graph, startingVertex) => {
   beforeAlgorithm()
   await breadthFirstSearch(startingVertex)
 
-  for (let v of graph.vertices) {
+  for (const v of graph.vertices) {
     if (v.state === VERTEX_STATES.unexplored) {
       await breadthFirstSearch(v)
     }
@@ -79,10 +79,10 @@ export const breadthFirstSearchInit = async (graph, startingVertex) => {
  */
 const breadthFirstSearch = async (startingVertex) => {
   /** List containing lists for each level. */
-  let l = []
+  const l = []
 
   /** List of level 0. */
-  let l0 = []
+  const l0 = []
   let i = 0
 
   startingVertex.state = VERTEX_STATES.explored
@@ -95,10 +95,10 @@ const breadthFirstSearch = async (startingVertex) => {
   l[0] = l0
 
   while (l[i].length > 0) {
-    let liPlus1 = []
+    const liPlus1 = []
     l[i + 1] = liPlus1
-    for (let v of l[i]) {
-      for (let e of v.outgoingEdges) {
+    for (const v of l[i]) {
+      for (const e of v.outgoingEdges) {
         if (e.state === EDGE_STATES.unexplored) {
           /** Opposite edge from the vertex v */
           let w
@@ -135,7 +135,7 @@ const breadthFirstSearch = async (startingVertex) => {
  * @param {Graph} Graph graph containing all connected components
  * @param {Vertex} startingVertex vertex to start Dijkstra's algorithm from
  */
-export const dijkstrasAlgorithm = async (graph, startingVertex) => {}
+const dijkstrasAlgorithm = async (graph, startingVertex) => {}
 
 /**
  * Runs before an algorithm starts running.
@@ -157,3 +157,5 @@ const afterAlgorithm = () => {
  * @returns
  */
 const sleep = () => new Promise((resolve) => setTimeout(resolve, state.visualizationDelay))
+
+export { breadthFirstSearchInit, depthFirstSearchInit, dijkstrasAlgorithm }

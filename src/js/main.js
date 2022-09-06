@@ -9,13 +9,13 @@ let graph = new Graph()
 /**
  * Initializes the application.
  */
-export const init = () => {
+const init = () => {
   /** Initializing edge canvas */
-  let edgeCanvas = document.getElementById('edge-canvas')
+  const edgeCanvas = document.getElementById('edge-canvas')
   edgeCanvas.height = window.innerHeight
   edgeCanvas.width = window.innerWidth - CANVAS_X_OFFSET
 
-  let edgeContext = edgeCanvas.getContext('2d')
+  const edgeContext = edgeCanvas.getContext('2d')
   state.edgeContext = edgeContext
 
   /**
@@ -25,11 +25,11 @@ export const init = () => {
   edgeCanvas.addEventListener('click', () => handleCanvasClick(event, graph))
 
   /** Initializing vertex canvas */
-  let vertexCanvas = document.getElementById('vertex-canvas')
+  const vertexCanvas = document.getElementById('vertex-canvas')
   vertexCanvas.height = window.innerHeight
   vertexCanvas.width = window.innerWidth - CANVAS_X_OFFSET
 
-  let vertexContext = vertexCanvas.getContext('2d')
+  const vertexContext = vertexCanvas.getContext('2d')
   state.vertexContext = vertexContext
 
   /** Initializing DFS button event handler. */
@@ -37,8 +37,8 @@ export const init = () => {
     /** Do not do anything if an algorithm is already running. */
     if (state.algorithmIsRunning) return
 
-    let select = document.getElementById('start-vertex-select')
-    let option = select.options[select.selectedIndex].value
+    const select = document.getElementById('start-vertex-select')
+    const option = select.options[select.selectedIndex].value
 
     depthFirstSearchInit(graph, graph.vertices[option])
   })
@@ -48,8 +48,8 @@ export const init = () => {
     /** Do not do anything if an algorithm is already running. */
     if (state.algorithmIsRunning) return
 
-    let select = document.getElementById('start-vertex-select')
-    let option = select.options[select.selectedIndex].value
+    const select = document.getElementById('start-vertex-select')
+    const option = select.options[select.selectedIndex].value
 
     breadthFirstSearchInit(graph, graph.vertices[option])
   })
@@ -66,7 +66,7 @@ export const init = () => {
   }) */
 
   /** Initializing visualization speed slider. */
-  let slider = document.getElementById('speed-slider')
+  const slider = document.getElementById('speed-slider')
   const sliderMax = 1000
   slider.min = 10
   slider.max = sliderMax
@@ -100,10 +100,12 @@ export const init = () => {
     clearStartVertexDropdown()
     resetState()
     graph = Graph.createRandomizedGraph()
-    for (let vertex of graph.vertices) addVertexToStartVertexDropdown(vertex)
+    for (const vertex of graph.vertices) addVertexToStartVertexDropdown(vertex)
     drawGraph(graph)
   })
 
   /** Setting disclaimer text. */
   document.getElementById('disclaimer').innerText = new Date().getFullYear() + ' Amar Tabakovic'
 }
+
+export { init }

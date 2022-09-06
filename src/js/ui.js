@@ -3,9 +3,9 @@
  *
  * @param {Vertex} vertex vertex to add
  */
-export const addVertexToStartVertexDropdown = (vertex) => {
-  let startVertexSelect = document.getElementById('start-vertex-select')
-  let option = document.createElement('option')
+const addVertexToStartVertexDropdown = (vertex) => {
+  const startVertexSelect = document.getElementById('start-vertex-select')
+  const option = document.createElement('option')
   option.value = option.innerHTML = vertex.id
   startVertexSelect.add(option)
 }
@@ -13,7 +13,9 @@ export const addVertexToStartVertexDropdown = (vertex) => {
 /**
  * Clears the starting vertex dropdown menu.
  */
-export const clearStartVertexDropdown = () => {
-  let startVertexSelect = document.getElementById('start-vertex-select')
+const clearStartVertexDropdown = () => {
+  const startVertexSelect = document.getElementById('start-vertex-select')
   while (startVertexSelect.options.length > 0) startVertexSelect.remove(0)
 }
+
+export { addVertexToStartVertexDropdown, clearStartVertexDropdown }
