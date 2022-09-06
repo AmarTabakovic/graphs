@@ -1,13 +1,13 @@
-import { handleCanvasClick, CANVAS_X_OFFSET, clearCanvas } from './canvas'
+import { handleCanvasClick, CANVAS_X_OFFSET, clearCanvas, drawGraph } from './canvas'
 import { depthFirstSearchInit, breadthFirstSearchInit, dijkstrasAlgorithm } from './algorithms'
 import { state, resetState } from './state'
-import { clearStartVertexDropdown } from './ui'
+import { addVertexToStartVertexDropdown, clearStartVertexDropdown } from './ui'
 import { Graph } from './graph'
 
 let graph = new Graph()
 
 /**
- * Initializes the application
+ * Initializes the application.
  */
 export const init = () => {
   /** Initializing edge canvas */
@@ -92,6 +92,16 @@ export const init = () => {
     clearStartVertexDropdown()
     resetState()
     graph = new Graph()
+  })
+
+  /** Initializing random graph button. */
+  document.getElementById('random-graph-button').addEventListener('click', () => {
+    clearCanvas()
+    clearStartVertexDropdown()
+    resetState()
+    graph = Graph.createRandomizedGraph()
+    for (let vertex of graph.vertices) addVertexToStartVertexDropdown(vertex)
+    drawGraph(graph)
   })
 
   /** Setting disclaimer text. */

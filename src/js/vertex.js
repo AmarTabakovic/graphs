@@ -3,7 +3,7 @@
  *
  * @enum {string}
  */
-export const VERTEX_STATES = {
+const VERTEX_STATES = {
   unexplored: 'unexplored',
   explored: 'explored',
 }
@@ -11,7 +11,7 @@ export const VERTEX_STATES = {
 /**
  * Represents a single graph vertex.
  */
-export class Vertex {
+class Vertex {
   /**
    * Constructor method.
    *
@@ -28,3 +28,5 @@ export class Vertex {
     this.state = VERTEX_STATES.unexplored
   }
 }
+
+export { VERTEX_STATES, Vertex }

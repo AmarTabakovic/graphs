@@ -23,6 +23,9 @@ export class Edge {
    * @param {boolean} isDirected whether the edge is directed
    */
   constructor(vertex0, vertex1, weight, isDirected) {
+    /** Weights cannot be below 0. */
+    if (isNaN(weight) || weight < 0) weight = 0
+
     this.vertex0 = vertex0
     this.vertex1 = vertex1
     this.weight = weight

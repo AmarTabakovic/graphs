@@ -14,7 +14,8 @@
 - Clean up SCSS code.
 - Responsiveness.
 - Document code.
-
+- Avoid global state.
+- Maybe use Greek letters (because they look so cool).
 ## To Fix
 - Restoring a graph to its initial state (before an algorithm is run)
     - `algorithmWasRun: Boolean` state property

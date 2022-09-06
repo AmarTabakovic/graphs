@@ -8,7 +8,7 @@ import { Vertex } from './vertex'
  *
  * @enum {string}
  */
-export const COLORS = {
+const COLORS = {
   green: '#82a762',
   yellow: '#e1af4c',
   blue: '#4b6a91',
@@ -17,7 +17,7 @@ export const COLORS = {
 }
 
 /** @constant */
-export const CANVAS_X_OFFSET = 400
+const CANVAS_X_OFFSET = 400
 
 /** @constant */
 const ARROW_SIDE_LENGTH = 40
@@ -43,7 +43,7 @@ const FONT_SIZE_SMALL = '8pt'
  *
  * @param {Graph} graph graph to be drawn
  */
-export const drawGraph = (graph) => {
+const drawGraph = (graph) => {
   for (let vertex of graph.vertices) {
     drawVertex(vertex, COLORS.white)
   }
@@ -58,7 +58,7 @@ export const drawGraph = (graph) => {
  * @param {Vertex} vertex vertex to be drawn
  * @param {COLORS} vertexColor color of the vertex
  */
-export const drawVertex = (vertex, vertexColor) => {
+const drawVertex = (vertex, vertexColor) => {
   let vertexContext = state.vertexContext
 
   vertexContext.beginPath()
@@ -83,7 +83,7 @@ export const drawVertex = (vertex, vertexColor) => {
  * @param {Vertex} vertex vertex to apply the subtext to
  * @param {string} subtext subtext to be drawn
  */
-export const drawVertexSubtext = (vertex, subtext) => {
+const drawVertexSubtext = (vertex, subtext) => {
   let vertexContext = state.vertexContext
 
   vertexContext.font = FONT_SIZE_SMALL + ' ' + FONT_FAMILY
@@ -100,7 +100,7 @@ export const drawVertexSubtext = (vertex, subtext) => {
  * @param {Edge} edge edge to be drawn
  * @param {COLORS} edgeColor color of the edge
  */
-export const drawEdge = (edge, edgeColor) => {
+const drawEdge = (edge, edgeColor) => {
   let edgeContext = state.edgeContext
 
   let x0Pos = edge.vertex0.xPos
@@ -144,19 +144,19 @@ export const drawEdge = (edge, edgeColor) => {
 
   /** Directed edges get an arrowhead. */
   if (edge.isDirected) {
-    edgeContext.fillStyle = edgeColor
-    edgeContext.beginPath()
+    //edgeContext.fillStyle = edgeColor
+    //edgeContext.beginPath()
 
     /** First part of the arrowhead. */
-    edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
-    edgeContext.lineTo()
-    edgeContext.stroke()
+    //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
+    //edgeContext.lineTo()
+    //edgeContext.stroke()
 
     /** Second part of the arrowhead. */
-    edgeContext.beginPath()
-    edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
-    edgeContext.lineTo()
-    edgeContext.stroke()
+    //edgeContext.beginPath()
+    //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
+    //edgeContext.lineTo()
+    //edgeContext.stroke()
   }
 
   /** Unweighted edges don't need to display the zero. */
@@ -190,8 +190,8 @@ export const drawEdge = (edge, edgeColor) => {
  * @param {Vertex} vertex vertex to check
  * @returns true if a vertex has been clicked on, false otherwise
  */
-const checkClickedOnVertex = (eventXPos, eventYPos, vertex) =>
-  Math.pow(eventXPos - CANVAS_X_OFFSET - vertex.xPos, 2) + Math.pow(eventYPos - vertex.yPos, 2) <=
+const checkCoordsOnVertex = (eventXPos, eventYPos, vertex) =>
+  Math.pow(eventXPos - vertex.xPos, 2) + Math.pow(eventYPos - vertex.yPos, 2) <=
   VERTEX_RADIUS * VERTEX_RADIUS
 
 /**
@@ -206,9 +206,9 @@ const checkClickedOnVertex = (eventXPos, eventYPos, vertex) =>
  * @param {Vertex} vertex vertex to check
  * @returns true if a mouse click occured near a vertex, false otherwise
  */
-const checkClickedNearVertex = (eventXPos, eventYPos, vertex) =>
-  eventXPos - CANVAS_X_OFFSET <= vertex.xPos + 2 * VERTEX_RADIUS &&
-  eventXPos - CANVAS_X_OFFSET >= vertex.xPos - 2 * VERTEX_RADIUS &&
+const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
+  eventXPos <= vertex.xPos + 2 * VERTEX_RADIUS &&
+  eventXPos >= vertex.xPos - 2 * VERTEX_RADIUS &&
   eventYPos <= vertex.yPos + 2 * VERTEX_RADIUS &&
   eventYPos >= vertex.yPos - 2 * VERTEX_RADIUS
 
@@ -220,7 +220,7 @@ const checkClickedNearVertex = (eventXPos, eventYPos, vertex) =>
  *
  * @param {object} event mouse click event
  */
-export const handleCanvasClick = (event, graph) => {
+const handleCanvasClick = (event, graph) => {
   if (state.algorithmIsRunning) return
   let vertices = graph.vertices
   let edges = graph.edges
@@ -230,7 +230,7 @@ export const handleCanvasClick = (event, graph) => {
    * and handle the event accordingly.
    */
   for (let vertex of vertices) {
-    if (checkClickedOnVertex(event.clientX, event.clientY, vertex)) {
+    if (checkCoordsOnVertex(event.clientX - CANVAS_X_OFFSET, event.clientY, vertex)) {
       if (state.lastClickedVertex != null) {
         if (state.lastClickedVertex == vertex) {
           state.lastClickedVertex = null
@@ -245,8 +245,6 @@ export const handleCanvasClick = (event, graph) => {
             }
           }
           let weight = parseInt(document.getElementById('weight-input').value)
-          if (isNaN(weight)) weight = 0
-
           let newEdge = new Edge(state.lastClickedVertex, vertex, weight, false)
           graph.insertEdge(newEdge)
           drawEdge(newEdge, COLORS.white)
@@ -261,27 +259,39 @@ export const handleCanvasClick = (event, graph) => {
   }
   /**
    * Second iteration: check whether a click event occured near a vertex
-   * (in order to avoid too close grouping of different vertices).
+   * in order to avoid grouping different vertices too close to each other.
    */
   for (let vertex of vertices) {
-    if (checkClickedNearVertex(event.clientX, event.clientY, vertex)) {
+    if (checkCoordsNearVertex(event.clientX - CANVAS_X_OFFSET, event.clientY, vertex)) {
       state.lastClickedVertex = null
       return
     }
   }
 
   /** Insert and draw the vertex if no other special cases occured */
-  let newVertex = new Vertex(event.clientX - CANVAS_X_OFFSET, event.clientY, state.currentVertexId)
+  let newVertex = new Vertex(event.clientX - CANVAS_X_OFFSET, event.clientY, graph.currentVertexId)
   graph.insertVertex(newVertex)
   addVertexToStartVertexDropdown(newVertex)
   drawVertex(newVertex, COLORS.white)
-  state.currentVertexId++
 }
 
 /**
  * Clears the edge canvas and vertex canvas.
  */
-export const clearCanvas = () => {
+const clearCanvas = () => {
   state.edgeContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
   state.vertexContext.clearRect(0, 0, window.innerWidth - CANVAS_X_OFFSET, window.innerHeight)
+}
+
+export {
+  COLORS,
+  CANVAS_X_OFFSET,
+  drawVertexSubtext,
+  drawVertex,
+  drawEdge,
+  drawGraph,
+  checkCoordsOnVertex,
+  checkCoordsNearVertex,
+  handleCanvasClick,
+  clearCanvas,
 }
