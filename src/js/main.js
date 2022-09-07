@@ -55,15 +55,15 @@ const init = () => {
   })
 
   /** Initializing Dijkstra's algorithm button event handler. */
-  // document.getElementById('dijkstras-button').addEventListener('click', () => {
-  /** Do not do anything if an algorithm is already running. */
-  /* if (state.algorithmIsRunning) return
+  document.getElementById('dijkstras-button').addEventListener('click', () => {
+    /** Do not do anything if an algorithm is already running. */
+    if (state.algorithmIsRunning) return
 
-    let select = document.getElementById('start-vertex-select')
-    let option = select.options[select.selectedIndex].value
-    
-    dijkstrasAlgorithm(state.vertices[option])
-  }) */
+    const select = document.getElementById('start-vertex-select')
+    const option = select.options[select.selectedIndex].value
+
+    dijkstrasAlgorithm(graph, graph.vertices[option])
+  })
 
   /** Initializing visualization speed slider. */
   const slider = document.getElementById('speed-slider')
@@ -76,18 +76,19 @@ const init = () => {
   })
 
   /** Initializing initial graph button. TODO: Implement */
-  // document.getElementById('initial-button').addEventListener('click', () => {
-  /** Do not do anything if an algorithm is already running. */
-  // if (state.algorithmIsRunning) return
-  /**
-   * 1. Set the graph state to be before the algorithm was run.
-   * 2. Clear the canvas.
-   * 3. Render the graph using drawGraph().
-   */
-  // })
+  document.getElementById('initial-button').addEventListener('click', () => {
+    /** Do not do anything if an algorithm is already running. */
+    if (state.algorithmIsRunning) return
+    graph.reset()
+    clearCanvas()
+    drawGraph(graph)
+  })
 
   /** Initializing clear screen button. */
   document.getElementById('clear-button').addEventListener('click', () => {
+    /** Do not do anything if an algorithm is already running. */
+    if (state.algorithmIsRunning) return
+
     clearCanvas()
     clearStartVertexDropdown()
     resetState()
@@ -96,6 +97,9 @@ const init = () => {
 
   /** Initializing random graph button. */
   document.getElementById('random-graph-button').addEventListener('click', () => {
+    /** Do not do anything if an algorithm is already running. */
+    if (state.algorithmIsRunning) return
+
     clearCanvas()
     clearStartVertexDropdown()
     resetState()

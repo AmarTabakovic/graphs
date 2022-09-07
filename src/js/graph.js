@@ -1,6 +1,6 @@
 import { CANVAS_X_OFFSET, checkCoordsNearVertex, checkCoordsOnVertex } from './canvas'
-import { Edge } from './edge'
-import { Vertex } from './vertex'
+import { Edge, EDGE_STATES } from './edge'
+import { Vertex, VERTEX_STATES } from './vertex'
 
 /**
  * Represents a single graph.
@@ -36,6 +36,19 @@ class Graph {
    */
   insertEdge(edge) {
     this.edges.push(edge)
+  }
+
+  /**
+   * Resets the graph's state to its initial state before an algorithm was run.
+   */
+  reset() {
+    for (const vertex of this.vertices) {
+      vertex.state = VERTEX_STATES.unexplored
+    }
+
+    for (const edge of this.edges) {
+      edge.state = EDGE_STATES.unexplored
+    }
   }
 
   /**
@@ -120,8 +133,8 @@ class Graph {
       }
       if (shouldContinue) continue
 
-      const randomWeight = Math.floor(Math.random() * 80) - 40
-      const randomDirected = Math.random() < 0.5
+      const randomWeight = Math.floor(Math.random() * 40)
+      const randomDirected = false //Math.random() < 0.5
 
       const newEdge = new Edge(randomVertex0, randomVertex1, randomWeight, randomDirected)
       randomizedGraph.insertEdge(newEdge)

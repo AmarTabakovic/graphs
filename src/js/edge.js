@@ -8,6 +8,7 @@ const EDGE_STATES = {
   discoveryEdge: 'discoveryEdge',
   backEdge: 'backEdge',
   crossEdge: 'crossEdge',
+  relaxed: 'relaxed',
 }
 
 /**

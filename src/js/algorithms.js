@@ -135,7 +135,80 @@ const breadthFirstSearch = async (startingVertex) => {
  * @param {Graph} Graph graph containing all connected components
  * @param {Vertex} startingVertex vertex to start Dijkstra's algorithm from
  */
-const dijkstrasAlgorithm = async (graph, startingVertex) => {}
+const dijkstrasAlgorithm = async (graph, startingVertex) => {
+  beforeAlgorithm()
+
+  const d = []
+  d[startingVertex.id] = 0
+
+  for (const u of graph.vertices) {
+    if (u != startingVertex) d[u.id] = Infinity
+    let distanceStr = d[u.id] == Infinity ? '\u221E' : '0'
+    drawVertexSubtext(graph.vertices[u.id], 'Distance: ' + distanceStr)
+  }
+
+  const q = []
+
+  for (const u of graph.vertices) {
+    /** Key: Vertex ID, Value: Vertex distance */
+    q[u.id] = d[u.id]
+  }
+
+  drawVertex(startingVertex, COLORS.blue)
+  drawVertexSubtext(startingVertex, 'Distance: 0')
+  await sleep()
+
+  let qLen = q.length
+
+  while (qLen > 0) {
+    /**
+     * removeMin() but in linear time instead of logarithmic time.
+     *
+     * TODO: Implement this with a priority queue.
+     */
+    let minKey = 0
+    let minValue = Infinity
+    for (const [key, value] of q.entries()) {
+      if (value < minValue) {
+        minKey = key
+        minValue = value
+      }
+    }
+    const u = graph.vertices[minKey]
+    q[minKey] = undefined
+    qLen--
+
+    drawVertex(u, COLORS.blue)
+    drawVertexSubtext(u, 'Distance: ' + d[u.id])
+    await sleep()
+
+    for (const e of u.outgoingEdges) {
+      let z
+      if (e.vertex0 == u) z = e.vertex1
+      else if (e.vertex1 == u) z = e.vertex0
+      if (e.state != EDGE_STATES.relaxed) {
+        drawEdge(e, COLORS.yellow)
+        await sleep()
+      }
+
+      /** Relaxation procedure. */
+      if (d[u.id] + e.weight < d[z.id]) {
+        d[z.id] = d[u.id] + e.weight
+        drawEdge(e, COLORS.green)
+        e.state = EDGE_STATES.relaxed
+        await sleep()
+        drawVertex(z, COLORS.green)
+        drawVertexSubtext(z, 'Distance: ' + d[z.id])
+        await sleep()
+        drawVertex(z, COLORS.white)
+        drawVertexSubtext(z, 'Distance: ' + d[z.id])
+        await sleep()
+        q[z.id] = d[z.id]
+      }
+    }
+  }
+  afterAlgorithm()
+}
 
 /**
  * Runs before an algorithm starts running.

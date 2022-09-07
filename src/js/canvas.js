@@ -63,8 +63,10 @@ const drawVertex = (vertex, vertexColor) => {
 
   vertexContext.beginPath()
   vertexContext.strokeStyle = vertexColor
+  vertexContext.fillStyle = COLORS.canvas
   vertexContext.lineWidth = STROKE_WIDTH
   vertexContext.arc(vertex.xPos, vertex.yPos, VERTEX_RADIUS, 0, 2 * Math.PI)
+  vertexContext.fill()
   vertexContext.stroke()
   vertexContext.fillStyle = COLORS.white
   vertexContext.font = FONT_SIZE_REGULAR + ' ' + FONT_FAMILY
