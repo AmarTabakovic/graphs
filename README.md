@@ -36,4 +36,4 @@ npm run build
 
 ## Credits & Resources
 - [webpack-boilerplate](https://github.com/taniarascia/webpack-boilerplate)
-- *Algorithm Design and Applications* by Goodrich and Tamassia
+- [Algorithm Design and Applications](https://www.wiley.com/en-us/Algorithm+Design+and+Applications-p-9781118335918) by Goodrich and Tamassia
