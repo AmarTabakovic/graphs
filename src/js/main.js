@@ -79,6 +79,7 @@ const init = () => {
   document.getElementById('initial-button').addEventListener('click', () => {
     /** Do not do anything if an algorithm is already running. */
     if (state.algorithmIsRunning) return
+
     graph.reset()
     clearCanvas()
     drawGraph(graph)

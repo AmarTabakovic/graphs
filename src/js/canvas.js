@@ -20,7 +20,10 @@ const COLORS = {
 const CANVAS_X_OFFSET = 400
 
 /** @constant */
-const ARROW_SIDE_LENGTH = 40
+const ARROW_HEAD_LENGTH = 20
+
+/** @constant */
+const ARROW_HEAD_ANGLE = Math.PI / 8
 
 /** @constant */
 const VERTEX_RADIUS = 40
@@ -53,7 +56,7 @@ const drawGraph = (graph) => {
 }
 
 /**
- * Draws a given vertex to the vertex canvas in a given color.
+ * Draws a vertex to the vertex canvas in a given color.
  *
  * @param {Vertex} vertex vertex to be drawn
  * @param {COLORS} vertexColor color of the vertex
@@ -77,7 +80,7 @@ const drawVertex = (vertex, vertexColor) => {
 }
 
 /**
- * Draws a given subtext of a given vertex.
+ * Draws a subtext of a given vertex.
  *
  * This function is mostly intended for BFS and Dijkstra's algorithm
  * to display the level and the value respectively.
@@ -144,32 +147,79 @@ const drawEdge = (edge, edgeColor) => {
   edgeContext.lineTo(x1Pos - lenX, y1Pos - lenY)
   edgeContext.stroke()
 
-  /** Directed edges get an arrowhead. */
+  /**
+   * Directed edges get an arrowhead.
+   *
+   * The formula behind drawing the arrowhead was mostly taken from here:
+   * https://stackoverflow.com/questions/47079268/how-to-draw-arrow-head-with-coordinates
+   */
   if (edge.isDirected) {
-    //edgeContext.fillStyle = edgeColor
-    //edgeContext.beginPath()
+    edgeContext.fillStyle = edgeColor
+
+    /** The point where the edge touches the vertex. */
+    const xEdge = x1Pos - lenX
+    const yEdge = y1Pos - lenY
+
+    /** Direction vector from vertex 0 to vertex 1. */
+    const vecX = xEdge - x0Pos
+    const vecY = yEdge - y0Pos
+
+    /** Normalizing the vector. */
+    const vecLength = Math.sqrt(vecX * vecX + vecY * vecY)
+    const unitX = vecX / vecLength
+    const unitY = vecY / vecLength
+
+    const arrowAngleCos = Math.cos(ARROW_HEAD_ANGLE)
+    const arrowAngleSin = Math.sin(ARROW_HEAD_ANGLE)
+
     /** First part of the arrowhead. */
-    //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
-    //edgeContext.lineTo()
-    //edgeContext.stroke()
+    edgeContext.beginPath()
+    edgeContext.moveTo(xEdge, yEdge)
+
+    /**
+     * The diagram below shows the geometry of drawing the arrowhead:
+     *
+     *                                    x (xArrowHead1, yArrowHead1)
+     *         , - ~ ~ ~ - ,             /                                  , - ~ ~ ~ - ,
+     *     , '               ' ,        /                               , '               ' ,
+     *   ,                       ,     /  } ARROW_HEAD_LENGTH         ,                       ,
+     *  ,                         ,   /                              ,                         ,
+     * ,                           , /                              ,                           ,
+     * ,            (xEdge, yEdge) x/------------- ... -------------,                           ,
+     * ,                           ,\                               ,                           ,
+     *  ,         vector1         ,  \                               ,         vector0         ,
+     *   ,                       ,    \                               ,                       ,
+     *     ,                  , '      \                                ,                  , '
+     *       ' - , _ _ _ ,  '           \                                 ' - , _ _ _ ,  '
+     *                                   x (xArrowHead0, yArrowHead0)
+     *
+     */
+    const xArrowHead0 = xEdge - (unitX * arrowAngleCos - unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
+    const yArrowHead0 = yEdge - (unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
+
+    edgeContext.lineTo(xArrowHead0, yArrowHead0)
+    edgeContext.stroke()
+
     /** Second part of the arrowhead. */
-    //edgeContext.beginPath()
-    //edgeContext.moveTo(x1Pos - lenX, y1Pos - lenY)
-    //edgeContext.lineTo()
-    //edgeContext.stroke()
+    edgeContext.beginPath()
+    edgeContext.moveTo(xEdge, yEdge)
+
+    const xArrowHead1 = xEdge - (unitX * arrowAngleCos + unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
+    const yArrowHead1 = yEdge - (-unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
+
+    edgeContext.lineTo(xArrowHead1, yArrowHead1)
+    edgeContext.stroke()
   }
 
   /** Unweighted edges don't need to display the zero. */
   if (edge.weight != 0) {
-    /**
-     * Drawing the dark background rectangle for the weight text.
-     *
-     * TODO: Delete a small section in the center of the edge instead of
-     * drawing a rectangle.
-     */
+    /** Drawing the dark background rectangle for the weight text. */
+    const rectHeight = 17
+    const rectWidth = 12 * edge.weight.toString().length
+
     edgeContext.beginPath()
     edgeContext.fillStyle = COLORS.canvas
-    edgeContext.fillRect(middleX - 20 / 2, middleY - 20 / 2, 20, 20)
+    edgeContext.fillRect(middleX - rectWidth / 2, middleY - rectHeight / 2, rectWidth, rectHeight)
     edgeContext.stroke()
 
     /** Drawing the weight text. */
@@ -183,28 +233,29 @@ const drawEdge = (edge, edgeColor) => {
 }
 
 /**
- * Checks whether a vertex has been clicked on.
+ * Checks whether given x and y-coordinates lie on top of a given vertex.
  *
- * @param {number} eventXPos x-position of the mouse click
- * @param {number} eventYPos y-position of the mouse click
+ * @param {number} xPos x-position
+ * @param {number} yPos y-position
  * @param {Vertex} vertex vertex to check
- * @returns true if a vertex has been clicked on, false otherwise
+ * @returns true if the given coordinates lie on a vertex, false otherwise
  */
-const checkCoordsOnVertex = (eventXPos, eventYPos, vertex) =>
-  Math.pow(eventXPos - vertex.xPos, 2) + Math.pow(eventYPos - vertex.yPos, 2) <=
-  VERTEX_RADIUS * VERTEX_RADIUS
+const checkCoordsOnVertex = (xPos, yPos, vertex) =>
+  Math.pow(xPos - vertex.xPos, 2) + Math.pow(yPos - vertex.yPos, 2) <= VERTEX_RADIUS * VERTEX_RADIUS
 
 /**
- * Checks whether a mouse click has occured near a vertex.
+ * Checks whether given x and y-coordinates lie in the vicinity a given vertex.
  *
- * This function also checks whether a vertex has been clicked on,
- * however the function checkClickedOnVertex() is recommended for
- * this purpose.
+ * The vicinity is defined as the square with the side lengths radius * 2.
  *
- * @param {number} eventXPos x-position of the mouse click
- * @param {number} eventYPos y-position of the mouse click
+ * This function also checks whether the given x and y-coordinates
+ * lie on top of a vertex, however the checkCoordsOnVertex() function
+ * is recommended for that purpose.
+ *
+ * @param {number} xPos x-position
+ * @param {number} yPos y-position
  * @param {Vertex} vertex vertex to check
- * @returns true if a mouse click occured near a vertex, false otherwise
+ * @returns true if the given coordinates lie near a vertex, false otherwise
  */
 const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
   eventXPos <= vertex.xPos + 2 * VERTEX_RADIUS &&
@@ -221,7 +272,9 @@ const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
  * @param {object} event mouse click event
  */
 const handleCanvasClick = (event, graph) => {
+  /** Don't do anytyhing if an algorithm is already running. */
   if (state.algorithmIsRunning) return
+
   const vertices = graph.vertices
   const edges = graph.edges
 
@@ -245,7 +298,9 @@ const handleCanvasClick = (event, graph) => {
             }
           }
           const weight = parseInt(document.getElementById('weight-input').value)
-          const newEdge = new Edge(state.lastClickedVertex, vertex, weight, false)
+          const isDirected =
+            document.querySelector('input[name = "edge-type"]:checked').value == 'Directed'
+          const newEdge = new Edge(state.lastClickedVertex, vertex, weight, isDirected)
           graph.insertEdge(newEdge)
           drawEdge(newEdge, COLORS.white)
 

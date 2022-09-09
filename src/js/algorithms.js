@@ -130,7 +130,8 @@ const breadthFirstSearch = async (startingVertex) => {
 }
 
 /**
- * Runs Dijkstra's algorithm.
+ * Performs Dijkstra's algorithm of the connected component
+ * from a given starting vertex.
  *
  * @param {Graph} Graph graph containing all connected components
  * @param {Vertex} startingVertex vertex to start Dijkstra's algorithm from
@@ -138,6 +139,7 @@ const breadthFirstSearch = async (startingVertex) => {
 const dijkstrasAlgorithm = async (graph, startingVertex) => {
   beforeAlgorithm()
 
+  /** Weight labels. */
   const d = []
   d[startingVertex.id] = 0
 
@@ -147,6 +149,7 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
     drawVertexSubtext(graph.vertices[u.id], 'Distance: ' + distanceStr)
   }
 
+  /** Simulating the priority queue using an array. */
   const q = []
 
   for (const u of graph.vertices) {
@@ -154,6 +157,7 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
     q[u.id] = d[u.id]
   }
 
+  startingVertex.state = VERTEX_STATES.explored
   drawVertex(startingVertex, COLORS.blue)
   drawVertexSubtext(startingVertex, 'Distance: 0')
   await sleep()
@@ -178,6 +182,7 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
     q[minKey] = undefined
     qLen--
 
+    u.state = VERTEX_STATES.explored
     drawVertex(u, COLORS.blue)
     drawVertexSubtext(u, 'Distance: ' + d[u.id])
     await sleep()
@@ -225,9 +230,9 @@ const afterAlgorithm = () => {
 }
 
 /**
- * Returns a new Promise
+ * Sleep function for visualizations.
  *
- * @returns
+ * @returns promise
  */
 const sleep = () => new Promise((resolve) => setTimeout(resolve, state.visualizationDelay))
 

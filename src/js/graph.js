@@ -63,6 +63,7 @@ class Graph {
     const randomizedGraph = new Graph()
     const randomVerticesMin = 5
     const randomVerticesMax = 15
+
     const numberOfVertices =
       Math.floor(Math.random() * (randomVerticesMax - randomVerticesMin + 1)) + randomVerticesMin
 
@@ -134,7 +135,7 @@ class Graph {
       if (shouldContinue) continue
 
       const randomWeight = Math.floor(Math.random() * 40)
-      const randomDirected = false //Math.random() < 0.5
+      const randomDirected = Math.random() < 0.5
 
       const newEdge = new Edge(randomVertex0, randomVertex1, randomWeight, randomDirected)
       randomizedGraph.insertEdge(newEdge)
