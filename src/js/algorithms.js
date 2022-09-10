@@ -1,5 +1,5 @@
 import { state } from './state'
-import { drawEdge, drawVertex, drawVertexSubtext, COLORS } from './canvas'
+import { drawEdge, drawVertex, drawVertexSubtext, COLORS, clearCanvas, drawGraph } from './canvas'
 import { EDGE_STATES } from './edge'
 import { VERTEX_STATES } from './vertex'
 
@@ -11,7 +11,7 @@ import { VERTEX_STATES } from './vertex'
  * @param {Vertex} startingVertex first vertex from which to perform a DFS
  */
 const depthFirstSearchInit = async (graph, startingVertex) => {
-  beforeAlgorithm()
+  beforeAlgorithm(graph)
   await depthFirstSearch(startingVertex)
   for (const v of graph.vertices) {
     if (v.state === VERTEX_STATES.unexplored) await depthFirstSearch(v)
@@ -60,7 +60,7 @@ const depthFirstSearch = async (startingVertex) => {
  * @param {Vertex} startingVertex first vertex from which to perform a BFS
  */
 const breadthFirstSearchInit = async (graph, startingVertex) => {
-  beforeAlgorithm()
+  beforeAlgorithm(graph)
   await breadthFirstSearch(startingVertex)
 
   for (const v of graph.vertices) {
@@ -137,7 +137,7 @@ const breadthFirstSearch = async (startingVertex) => {
  * @param {Vertex} startingVertex vertex to start Dijkstra's algorithm from
  */
 const dijkstrasAlgorithm = async (graph, startingVertex) => {
-  beforeAlgorithm()
+  beforeAlgorithm(graph)
 
   /** Weight labels. */
   const d = []
@@ -218,7 +218,10 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
 /**
  * Runs before an algorithm starts running.
  */
-const beforeAlgorithm = () => {
+const beforeAlgorithm = (graph) => {
+  graph.reset()
+  clearCanvas()
+  drawGraph(graph)
   state.algorithmIsRunning = true
 }
 
