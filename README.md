@@ -3,7 +3,7 @@ A graph algorithm visualizer written in JavaScript using the Canvas API.
 
 ![Preview](docs/preview.gif)
 
-Try it out under [graphs.amartabakovic.ch](https://graphs.amartabakovic.ch) (work in progress).
+Try it out under [graphs.amartabakovic.ch](https://graphs.amartabakovic.ch).
 ## Installation & Building
 ### Installation
 ```plaintext
@@ -32,7 +32,7 @@ npm run build
 
 ## Non-Features
 - Responsive web design
-- Currently unsupported on mobile and screens with a width and height smaller than 800px.
+- Currently unsupported on mobile and screens with a width smaller than 800px and a height smaller than 760px.
 
 ## Credits & Resources
 - [webpack-boilerplate](https://github.com/taniarascia/webpack-boilerplate)
