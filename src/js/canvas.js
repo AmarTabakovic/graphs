@@ -187,7 +187,7 @@ const drawEdge = (edge, edgeColor) => {
      * ,                           , /                              ,                           ,
      * ,            (xEdge, yEdge) x/------------- ... -------------,                           ,
      * ,                           ,\                               ,                           ,
-     *  ,         vector1         ,  \                               ,         vector0         ,
+     *  ,         vertex1         ,  \                               ,         vertex0         ,
      *   ,                       ,    \                               ,                       ,
      *     ,                  , '      \                                ,                  , '
      *       ' - , _ _ _ ,  '           \                                 ' - , _ _ _ ,  '
