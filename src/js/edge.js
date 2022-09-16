@@ -41,4 +41,4 @@ class Edge {
   }
 }
 
-export { EDGE_STATES, Edge }
+export { Edge, EDGE_STATES }

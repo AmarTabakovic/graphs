@@ -1,6 +1,6 @@
+import { Edge } from './edge'
 import { state } from './state'
 import { addVertexToStartVertexDropdown } from './ui'
-import { Edge } from './edge'
 import { Vertex } from './vertex'
 
 /**
@@ -257,11 +257,11 @@ const checkCoordsOnVertex = (xPos, yPos, vertex) =>
  * @param {Vertex} vertex vertex to check
  * @returns true if the given coordinates lie near a vertex, false otherwise
  */
-const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
-  eventXPos <= vertex.xPos + 2 * VERTEX_RADIUS &&
-  eventXPos >= vertex.xPos - 2 * VERTEX_RADIUS &&
-  eventYPos <= vertex.yPos + 2 * VERTEX_RADIUS &&
-  eventYPos >= vertex.yPos - 2 * VERTEX_RADIUS
+const checkCoordsNearVertex = (xPos, yPos, vertex) =>
+  xPos <= vertex.xPos + 2 * VERTEX_RADIUS &&
+  xPos >= vertex.xPos - 2 * VERTEX_RADIUS &&
+  yPos <= vertex.yPos + 2 * VERTEX_RADIUS &&
+  yPos >= vertex.yPos - 2 * VERTEX_RADIUS
 
 /**
  * Handles an edge canvas click event and performs graph and canvas
@@ -270,6 +270,7 @@ const checkCoordsNearVertex = (eventXPos, eventYPos, vertex) =>
  * This function immediately returns when an algorithm is running already.
  *
  * @param {object} event mouse click event
+ * @param {Graph} graph graph to check and mutate
  */
 const handleCanvasClick = (event, graph) => {
   /** Don't do anytyhing if an algorithm is already running. */
@@ -343,14 +344,14 @@ const clearCanvas = () => {
 }
 
 export {
-  COLORS,
   CANVAS_X_OFFSET,
-  drawVertexSubtext,
-  drawVertex,
+  checkCoordsNearVertex,
+  checkCoordsOnVertex,
+  clearCanvas,
+  COLORS,
   drawEdge,
   drawGraph,
-  checkCoordsOnVertex,
-  checkCoordsNearVertex,
+  drawVertex,
+  drawVertexSubtext,
   handleCanvasClick,
-  clearCanvas,
 }

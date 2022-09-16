@@ -1,7 +1,7 @@
 /**
  * Global state variables.
  *
- * TODO: Yeah, yeah, global vars are the source of evil hurr durr...
+ * TODO: Find more elegant solution.
  */
 const state = {
   edgeContext: null,
@@ -24,4 +24,4 @@ const resetState = () => {
   state.algorithmIsRunning = false
 }
 
-export { state, resetState }
+export { resetState, state }

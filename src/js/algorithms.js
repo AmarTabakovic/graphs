@@ -1,6 +1,6 @@
-import { state } from './state'
-import { drawEdge, drawVertex, drawVertexSubtext, COLORS, clearCanvas, drawGraph } from './canvas'
+import { clearCanvas, COLORS, drawEdge, drawGraph, drawVertex, drawVertexSubtext } from './canvas'
 import { EDGE_STATES } from './edge'
+import { state } from './state'
 import { VERTEX_STATES } from './vertex'
 
 /**
@@ -217,6 +217,8 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
 
 /**
  * Runs before an algorithm starts running.
+ *
+ * @param {Graph} graph graph to run an algorithm on
  */
 const beforeAlgorithm = (graph) => {
   graph.reset()

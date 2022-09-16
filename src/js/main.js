@@ -1,8 +1,8 @@
-import { handleCanvasClick, CANVAS_X_OFFSET, clearCanvas, drawGraph } from './canvas'
-import { depthFirstSearchInit, breadthFirstSearchInit, dijkstrasAlgorithm } from './algorithms'
-import { state, resetState } from './state'
-import { addVertexToStartVertexDropdown, clearStartVertexDropdown } from './ui'
+import { breadthFirstSearchInit, depthFirstSearchInit, dijkstrasAlgorithm } from './algorithms'
+import { CANVAS_X_OFFSET, clearCanvas, drawGraph, handleCanvasClick } from './canvas'
 import { Graph } from './graph'
+import { resetState, state } from './state'
+import { addVertexToStartVertexDropdown, clearStartVertexDropdown } from './ui'
 
 let graph = new Graph()
 

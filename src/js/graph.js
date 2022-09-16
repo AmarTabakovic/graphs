@@ -57,7 +57,7 @@ class Graph {
    * The formula for computing random numbers in a range is taken from here:
    * https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
    *
-   * @returns graph with randomized vertices and edges
+   * @returns new graph with randomized vertices and edges
    */
   static createRandomizedGraph() {
     const randomizedGraph = new Graph()

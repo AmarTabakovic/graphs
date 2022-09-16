@@ -29,4 +29,4 @@ class Vertex {
   }
 }
 
-export { VERTEX_STATES, Vertex }
+export { Vertex, VERTEX_STATES }
