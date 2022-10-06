@@ -202,9 +202,11 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
         drawEdge(e, COLORS.green)
         e.state = EDGE_STATES.relaxed
         await sleep()
+
         drawVertex(z, COLORS.green)
         drawVertexSubtext(z, 'Distance: ' + d[z.id])
         await sleep()
+        
         drawVertex(z, COLORS.white)
         drawVertexSubtext(z, 'Distance: ' + d[z.id])
         await sleep()

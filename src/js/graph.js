@@ -72,6 +72,9 @@ class Graph {
     /** n choose 4. */
     const randomEdgesMax = (numberOfVertices * (numberOfVertices - 1)) / 4
 
+    /** The entire graph is either directed or not. */
+    const randomDirected = Math.random() < 0.5
+
     const numberOfEdges =
       Math.floor(Math.random() * (randomEdgesMax - randomEdgesMin + 1)) + randomEdgesMin
 
@@ -135,7 +138,6 @@ class Graph {
       if (shouldContinue) continue
 
       const randomWeight = Math.floor(Math.random() * 40)
-      const randomDirected = Math.random() < 0.5
 
       const newEdge = new Edge(randomVertex0, randomVertex1, randomWeight, randomDirected)
       randomizedGraph.insertEdge(newEdge)
