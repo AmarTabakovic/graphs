@@ -18,4 +18,3 @@
 		- Prim-Jarnik algorithm
 		- Floyd-Warshall algorithm
 	- If a grpah doesn't meet the requirements for an algorithm (e.g. negative cycle), display error message using `alert()`.
-- Fix Dijkstra's algorithm visualization (currently doesn't visualize relaxed edges properly)

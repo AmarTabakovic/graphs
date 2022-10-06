@@ -193,23 +193,45 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
       else if (e.vertex1 == u) z = e.vertex0
       if (e.state != EDGE_STATES.relaxed) {
         drawEdge(e, COLORS.yellow)
+        e.state = EDGE_STATES.discoveryEdge
         await sleep()
       }
 
       /** Relaxation procedure. */
       if (d[u.id] + e.weight < d[z.id]) {
         d[z.id] = d[u.id] + e.weight
+
+        /** Mark the edge as relaxed. */
         drawEdge(e, COLORS.green)
         e.state = EDGE_STATES.relaxed
         await sleep()
 
+        /** Mark all other visited adjacent edges as yellow when a better path is found. */
+        for (let edge of z.incomingEdges) {
+          if (edge != e && edge.state == EDGE_STATES.relaxed) {
+            drawEdge(edge, COLORS.yellow)
+            edge.state = EDGE_STATES.discoveryEdge
+          }
+        }
+        
+        /** Same for undirected edges. */
+        for (let edge of z.outgoingEdges) {
+          if (edge != e && !edge.isDirected && edge.state == EDGE_STATES.relaxed) {
+            drawEdge(edge, COLORS.yellow)
+            edge.state = EDGE_STATES.discoveryEdge
+          }
+        } 
+
+        /** Temporarily mark the vertex as relaxed. */
         drawVertex(z, COLORS.green)
         drawVertexSubtext(z, 'Distance: ' + d[z.id])
         await sleep()
         
+        /** Mark the vertex as white again. */
         drawVertex(z, COLORS.white)
         drawVertexSubtext(z, 'Distance: ' + d[z.id])
         await sleep()
+
         q[z.id] = d[z.id]
       }
     }
