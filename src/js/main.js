@@ -75,7 +75,7 @@ const init = () => {
     state.visualizationDelay = sliderMax - slider.value
   })
 
-  /** Initializing initial graph button. TODO: Implement */
+  /** Initializing initial graph button. */
   document.getElementById('initial-button').addEventListener('click', () => {
     /** Do not do anything if an algorithm is already running. */
     if (state.algorithmIsRunning) return

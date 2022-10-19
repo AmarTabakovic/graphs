@@ -240,8 +240,11 @@ const drawEdge = (edge, edgeColor) => {
  * @param {Vertex} vertex vertex to check
  * @returns true if the given coordinates lie on a vertex, false otherwise
  */
-const checkCoordsOnVertex = (xPos, yPos, vertex) =>
-  Math.pow(xPos - vertex.xPos, 2) + Math.pow(yPos - vertex.yPos, 2) <= VERTEX_RADIUS * VERTEX_RADIUS
+const checkCoordsOnVertex = (xPos, yPos, vertex) => {
+  const x = xPos - vertex.xPos
+  const y = yPos - vertex.yPos
+  return x * x + y * y <= VERTEX_RADIUS * VERTEX_RADIUS
+}
 
 /**
  * Checks whether given x and y-coordinates lie in the vicinity a given vertex.
@@ -287,13 +290,15 @@ const handleCanvasClick = (event, graph) => {
     if (checkCoordsOnVertex(event.clientX - CANVAS_X_OFFSET, event.clientY, vertex)) {
       if (state.lastClickedVertex != null) {
         if (state.lastClickedVertex == vertex) {
+          /** Avoiding self-loops. */
           state.lastClickedVertex = null
         } else {
           for (const edge of edges) {
             if (
-              (edge.vertex0.id === vertex.id && edge.vertex1.id === state.lastClickedVertex.id) ||
-              (edge.vertex0.id === state.lastClickedVertex.id && edge.vertex1.id === vertex.id)
+              (edge.vertex0 == vertex && edge.vertex1 == state.lastClickedVertex) ||
+              (edge.vertex0 == state.lastClickedVertex && edge.vertex1 == vertex)
             ) {
+               /** Avoiding duplicate edges. */
               state.lastClickedVertex = null
               return
             }
