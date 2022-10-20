@@ -143,6 +143,7 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
   const d = []
   d[startingVertex.id] = 0
 
+  /** Drawing the inital graph weights. */
   for (const u of graph.vertices) {
     if (u != startingVertex) d[u.id] = Infinity
     let distanceStr = d[u.id] == Infinity ? '\u221E' : '0'

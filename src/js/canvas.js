@@ -160,9 +160,9 @@ const drawEdge = (edge, edgeColor) => {
     const xEdge = x1Pos - lenX
     const yEdge = y1Pos - lenY
 
-    /** Direction vector from vertex 0 to vertex 1. */
-    const vecX = xEdge - x0Pos
-    const vecY = yEdge - y0Pos
+    /** Direction vector from vertex 1 to vertex 0. */
+    const vecX = x0Pos - x1Pos
+    const vecY = y0Pos - y1Pos
 
     /** Normalizing the vector. */
     const vecLength = Math.sqrt(vecX * vecX + vecY * vecY)
@@ -194,8 +194,8 @@ const drawEdge = (edge, edgeColor) => {
      *                                   x (xArrowHead0, yArrowHead0)
      *
      */
-    const xArrowHead0 = xEdge - (unitX * arrowAngleCos - unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
-    const yArrowHead0 = yEdge - (unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
+    const xArrowHead0 = xEdge + (unitX * arrowAngleCos - unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
+    const yArrowHead0 = yEdge + (unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
 
     edgeContext.lineTo(xArrowHead0, yArrowHead0)
     edgeContext.stroke()
@@ -204,8 +204,8 @@ const drawEdge = (edge, edgeColor) => {
     edgeContext.beginPath()
     edgeContext.moveTo(xEdge, yEdge)
 
-    const xArrowHead1 = xEdge - (unitX * arrowAngleCos + unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
-    const yArrowHead1 = yEdge - (-unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
+    const xArrowHead1 = xEdge + (unitX * arrowAngleCos + unitY * arrowAngleSin) * ARROW_HEAD_LENGTH
+    const yArrowHead1 = yEdge + (-unitX * arrowAngleSin + unitY * arrowAngleCos) * ARROW_HEAD_LENGTH
 
     edgeContext.lineTo(xArrowHead1, yArrowHead1)
     edgeContext.stroke()
