@@ -20,20 +20,19 @@ const depthFirstSearchInit = async (graph, startingVertex) => {
 }
 
 /**
- * Performs a depth first search of the connected component
+ * Performs a depth first search over the connected component
  * from a given starting vertex.
  *
  * @param {Vertex} startingVertex vertex to start the DFS from
  */
 const depthFirstSearch = async (startingVertex) => {
   startingVertex.state = VERTEX_STATES.explored
-
   drawVertex(startingVertex, COLORS.blue)
   await sleep()
 
   for (const e of startingVertex.outgoingEdges) {
     if (e.state === EDGE_STATES.unexplored) {
-      /** Opposite edge from the starting vertex. */
+      /** Opposite vertex from the starting vertex. */
       let w
       if (e.vertex0 == startingVertex) w = e.vertex1
       else if (e.vertex1 == startingVertex) w = e.vertex0
@@ -72,7 +71,7 @@ const breadthFirstSearchInit = async (graph, startingVertex) => {
 }
 
 /**
- * Performs a depth first search of the connected component
+ * Performs a depth first search over the connected component
  * from a given starting vertex.
  *
  * @param {Vertex} startingVertex vertex to start the BFS from
@@ -100,7 +99,7 @@ const breadthFirstSearch = async (startingVertex) => {
     for (const v of l[i]) {
       for (const e of v.outgoingEdges) {
         if (e.state === EDGE_STATES.unexplored) {
-          /** Opposite edge from the vertex v */
+          /** Opposite vertex from the vertex v. */
           let w
           if (e.vertex0 == v) w = e.vertex1
           else if (e.vertex1 == v) w = e.vertex0
@@ -130,7 +129,7 @@ const breadthFirstSearch = async (startingVertex) => {
 }
 
 /**
- * Performs Dijkstra's algorithm of the connected component
+ * Performs Dijkstra's algorithm over the connected component
  * from a given starting vertex.
  *
  * @param {Graph} Graph graph containing all connected components
@@ -189,9 +188,11 @@ const dijkstrasAlgorithm = async (graph, startingVertex) => {
     await sleep()
 
     for (const e of u.outgoingEdges) {
+      /** Opposite vertex from u. */
       let z
       if (e.vertex0 == u) z = e.vertex1
       else if (e.vertex1 == u) z = e.vertex0
+
       if (e.state != EDGE_STATES.relaxed) {
         drawEdge(e, COLORS.yellow)
         e.state = EDGE_STATES.discoveryEdge
